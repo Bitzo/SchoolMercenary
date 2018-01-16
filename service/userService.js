@@ -1,15 +1,21 @@
 const userDAL = require('../dal/userDAL');
+const dv = require('../utils/dataValidator');
 const _ = require('lodash');
 
-const userService = {};
-
-userService.addUser = async (userInfo) => {
-  // 检查userinfo， 确保每个属性都是合法的符合预期的
-  // 不过由于使用了sequelize
-  // 似乎也可以把这种值判断直接写进model里，通过组件自动处理 ？
+/**
+ * service_addUser
+ * @param {object} userInfo
+ * @param {string} userInfo.username 用户名
+ * @param {string} userInfo.password 密码
+ * @param {string} userInfo.key 密钥
+ *
+ * @return {boolean|object} 新增成功返回插入的数据基本信息
+ *                          失败则返回false
+ */
+async function addUser(userInfo) {
   const info = {};
   _.forIn(userInfo, (value, key) => {
-    if (!(value === '' || value === null || value === undefined)) {
+    if (dv.isParamsValid({ value })) {
       info[key] = value;
     }
   });
@@ -19,21 +25,44 @@ userService.addUser = async (userInfo) => {
     console.log(`Add User Failed: ${err}`);
     return false;
   }
-};
+}
 
-userService.queryUsers = async (userInfo) => {
-  const info = {};
-  _.forIn(userInfo, (value, key) => {
-    if (!(value === null || value === undefined || value === '')) {
-      info[key] = value;
+
+/**
+ * service_queryUsers
+ * @param {object} andParam
+ * @param {Array} orParam
+ * @param {number=} userInfo.id 用户id
+ * @param {string=} userInfo.username 用户名
+ * @param {string=} userInfo.email 邮箱
+ * @param {boolean=1} userInfo.gender 性别
+ * @param {date=} userInfo.birthday 生日
+ * @param {string=} userInfo.descrption 个性签名
+ * @param {string=1} userInfo.isActive 是否有效
+ * @param {string=} userInfo.avatar 头像
+ *
+ * @return {boolean|array} 查询成功返回对象数组，查询失败则返回false
+ */
+async function queryUsers(andParam = {}, orParam = []) {
+  const and = {};
+  let or = [];
+  _.forIn(andParam, (value, key) => {
+    if (dv.isParamsValid({ value })) {
+      and[key] = value;
     }
   });
+  if (orParam.length > 0) {
+    or = orParam;
+  }
   try {
-    return await userDAL.queryUsers(info);
+    return await userDAL.queryUsers(and, or);
   } catch (err) {
     console.log(`Query User Failed: ${err}`);
     return false;
   }
-};
+}
 
-module.exports = userService;
+module.exports = {
+  addUser,
+  queryUsers,
+};

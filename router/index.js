@@ -1,5 +1,9 @@
 const Router = require('koa-router');
 const usersRouter = require('./api/users');
+const dv = require('../utils/dataValidator');
+const crypt = require('../utils/encrypt');
+const userService = require('../service/userService');
+const validAuth = require('../utils/validAuth');
 
 const router = new Router();
 
@@ -11,37 +15,122 @@ router.get('/', (ctx) => {
   });
 });
 
-router.get('/hello', (ctx) => {
-  const name = `bitzo ${Math.random() * 100}`;
-  if (ctx.cookies.get('name')) {
-    console.log(ctx.cookies.get('name'));
-  } else {
-    ctx.cookies.set(
-      'name',
-      name,
-      {
-        // domain: 'localhost', // 写cookie所在的域名
-        // path: '/index', // 写cookie所在的路径
-        maxAge: 5 * 60 * 1000, // cookie有效时长
-        overwrite: false, // 是否允许重写
-        httpOnly: false, // 是否只用于http请求中获取
-        expires: new Date('2017-11-19'), // cookie失效时间
-      },
-    );
+/**
+ * @api 用户注册-常规法
+ * @param {string} username
+ * @param {password} password
+ */
+router.post('/api/register/normal', async (ctx) => {
+  const { username, password, nickname } = ctx.request.body;
+  const userInfo = { username, password, nickname };
+
+  const err = dv.isParamsInvalid(userInfo);
+
+  if (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: `{ ${err} } 参数填写不正确`,
+    };
+    return;
   }
-  ctx.body = `${ctx.method}: ${ctx.url}`;
+
+  let result = await userService.queryUsers({ username });
+  if (!result || result.length) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '注册失败, 用户名重复。',
+    };
+    return;
+  }
+
+  const { encrypted, key } = crypt.encrypt(password);
+
+  userInfo.password = encrypted;
+  userInfo.key = key;
+
+  result = await userService.addUser(userInfo);
+
+  if (result) {
+    ctx.status = 200;
+    ctx.body = {
+      status: 200,
+      isSuccess: true,
+      msg: '注册成功',
+    };
+  } else {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '注册失败',
+    };
+  }
 });
 
-router.get('/bye', (ctx) => {
-  ctx.body = `${ctx.method}: ${ctx.url}`;
-});
+/**
+ * @api 用户登录
+ * @param {string} username
+ * @param {string} password
+ */
+router.post('/api/login', async (ctx) => {
+  const { account, password } = ctx.request.body;
 
-router.get('/home', (ctx) => {
-  console.log(`${ctx.method}: ${ctx.url}`);
-  return ctx.render('home', {
-    name: 'bitzo',
-    content: 'nothing',
-  });
+  const err = dv.isParamsInvalid({ account, password });
+
+  if (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: `{ ${err} } 参数填写错误`,
+    };
+    return;
+  }
+
+  let result = await userService.queryUsers({}, [
+    {
+      username: account,
+    }, {
+      nickname: account,
+    }, {
+      email: account,
+    },
+  ]);
+
+  if (result && result.length === 1) {
+    [result] = result;
+    const decryptPwd = await crypt.decrypt(result.password, result.key);
+    if (decryptPwd === password) {
+      const token = validAuth.getJWT({
+        id: result.id,
+        username: result.username,
+      });
+      ctx.body = {
+        status: 200,
+        isSuccess: true,
+        msg: '登录成功',
+        token,
+      };
+      return;
+    }
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '登录失败',
+    };
+  }
+
+  ctx.status = 400;
+  ctx.body = {
+    status: 400,
+    isSuccess: false,
+    msg: '登录失败',
+  };
 });
 
 router.use('/api', usersRouter.routes());

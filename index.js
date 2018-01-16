@@ -12,8 +12,8 @@ const app = new Koa();
 const staticFIlesPath = './public';
 
 // set views like path,ext...
-app.use(views(path.join(__dirname, '/public/views'), {
-  extension: 'jade',
+app.use(views(path.join(__dirname, '/public'), {
+  // extension: 'html',
 }));
 
 app.use(statics(path.join(__dirname, staticFIlesPath)));

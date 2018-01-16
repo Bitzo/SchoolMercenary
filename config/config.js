@@ -1,4 +1,6 @@
 const config = {
+  salt: '',
+  secret: '',
   // mysql config
   port: 3000,
   mysql: {

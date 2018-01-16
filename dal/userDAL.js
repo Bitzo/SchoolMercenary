@@ -1,54 +1,74 @@
 const User = require('../db/models/userModel');
+const _ = require('lodash');
+const Sequelize = require('sequelize');
 
-const userDAL = {};
+const { Op } = Sequelize;
 
-userDAL.addUser = async (userInfo) => {
-  // User
-  //   .create({
-  //     username: userInfo.username,
-  //     password: userInfo.password,
-  //     gender: userInfo.gender,
-  //     descrption: userInfo.descrption,
-  //     isActive: userInfo.isActive,
-  //   })
-  //   .then((p) => {
-  //     console.log(`Created User: ${JSON.stringify(p)}`);
-  //   })
-  //   .catch((err) => {
-  //     console.log(`Created User Failed: ${err}`);
-  //   });
-
-  // if use async/await, use try/catch handle error.
+/**
+ * db_addUser
+ * @param {object} userInfo
+ * @param {string} userInfo.username 用户名
+ * @param {string} userInfo.password 密码
+ * @param {string} userInfo.key 密钥
+ *
+ * @return {boolean|object} 新增成功返回插入的数据基本信息
+ *                          失败则返回false
+ */
+async function addUser(userInfo) {
   try {
-    const u = await User.create({
-      username: userInfo.username,
-      password: userInfo.password,
-      gender: userInfo.gender,
-      descrption: userInfo.descrption,
-      isActive: userInfo.isActive,
-    });
-
+    let u = await User.create(userInfo);
     console.log(`Created User: ${JSON.stringify(u)}`);
-    return true;
+    u = JSON.parse(JSON.stringify(u));
+    return _.omit(u, ['key', 'password']);
   } catch (err) {
     console.log(`Created User Failed: ${err}`);
     return false;
   }
-};
+}
 
-userDAL.queryUsers = async (userInfo) => {
+/**
+ * db_queryUsers
+ * @param {Object} andParam
+ * @param {Array} orParam
+ * @param {number=} userInfo.id 用户id
+ * @param {string=} userInfo.username 用户名
+ * @param {string=} userInfo.nickname 昵称
+ * @param {string=} userInfo.email 邮箱
+ * @param {boolean=1} userInfo.gender 性别
+ * @param {date=} userInfo.birthday 生日
+ * @param {string=} userInfo.descrption 个性签名
+ * @param {string=1} userInfo.isActive 是否有效
+ * @param {string=} userInfo.avatar 头像
+ *
+ * @return {boolean|array} 查询成功返回对象数组，查询失败则返回false
+ */
+async function queryUsers(andParam = {}, orParam = []) {
   try {
-    const users = await User.findAll({
-      where: userInfo,
-    });
-    users.forEach((user) => {
-      console.log(`Query Users: ${user}`);
-    });
+    let users = [];
+    if (orParam.length === 0) {
+      users = await User.findAll({
+        where: {
+          [Op.and]: andParam,
+        },
+      });
+    } else {
+      users = await User.findAll({
+        where: {
+          [Op.and]: andParam,
+          [Op.or]: orParam,
+        },
+      });
+    }
+
+    users = JSON.parse(JSON.stringify(users));
     return users;
   } catch (err) {
     console.log(`Query Users Error: ${err}`);
     return false;
   }
-};
+}
 
-module.exports = userDAL;
+module.exports = {
+  addUser,
+  queryUsers,
+};
