@@ -90,6 +90,87 @@ router.post('/api/register/normal', async (ctx) => {
 });
 
 /**
+ * @api 用户注册-手机注册
+ * @param {string} username
+ * @param {password} password
+ */
+router.post('/api/register/phone', async (ctx) => {
+  const {
+    username,
+    password,
+    nickname,
+    phoneNumber,
+  } = ctx.request.body;
+
+  const userInfo = {
+    username,
+    password,
+    nickname,
+    phoneNumber,
+  };
+
+  const err = dv.isParamsInvalid(userInfo);
+
+  if (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: `{ ${err} } 参数填写不正确`,
+    };
+    return;
+  }
+
+  let result = await userService.queryUsers({ username });
+  console.log(result);
+  if (!result || result.count) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '注册失败, 用户名重复。',
+    };
+    return;
+  }
+
+  result = await userService.queryUsers({ phoneNumber });
+  console.log(result);
+
+  if (!result || result.count) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '注册失败, 手机号已注册。',
+    };
+    return;
+  }
+
+  const { encrypted, key } = crypt.encrypt(password);
+
+  userInfo.password = encrypted;
+  userInfo.key = key;
+
+  result = await userService.addUser(userInfo);
+
+  if (result) {
+    ctx.status = 200;
+    ctx.body = {
+      status: 200,
+      isSuccess: true,
+      msg: '注册成功',
+    };
+  } else {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '注册失败',
+    };
+  }
+});
+
+/**
  * @api 用户登录
  * @param {string} username
  * @param {string} password
@@ -116,6 +197,8 @@ router.post('/api/login', async (ctx) => {
       nickname: account,
     }, {
       email: account,
+    }, {
+      phoneNumber: account,
     },
   ]);
 

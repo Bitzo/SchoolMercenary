@@ -1874,7 +1874,7 @@ define({ "api": [
             "size": "..30",
             "optional": false,
             "field": "account",
-            "description": "<p>登录帐号,可以是email/username/nickname</p>"
+            "description": "<p>登录帐号,可以是email/username/nickname/phoneNUmber</p>"
           },
           {
             "group": "Parameter",
@@ -2061,7 +2061,7 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/api/register/phone",
-    "title": "*用户注册-手机注册",
+    "title": "用户注册-手机注册",
     "name": "UserRegister_phone",
     "group": "User",
     "version": "1.0.0",
@@ -2078,10 +2078,27 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "Number",
+            "type": "String",
+            "size": "5...30",
             "optional": false,
-            "field": "code",
-            "description": ""
+            "field": "username",
+            "description": "<p>用户名</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "5...30",
+            "optional": false,
+            "field": "nickname",
+            "description": "<p>昵称</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "8...20",
+            "optional": false,
+            "field": "password",
+            "description": "<p>密码</p>"
           }
         ]
       }

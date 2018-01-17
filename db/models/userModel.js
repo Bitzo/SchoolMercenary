@@ -28,6 +28,7 @@ const user = sequelize.define('user', {
     allowNull: true,
     validate: {
       isNumeric: true,
+      len: [11, 11],
     },
   },
   password: {
