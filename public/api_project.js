@@ -3,7 +3,7 @@ define({
   "version": "1.0.1",
   "description": "apiDoc",
   "title": "apiDoc v1.0",
-  "url": "https://api.bitzo.cn:3001",
+  "url": "http://api.bitzo.cn:3001",
   "order": [
     "User",
     "Task",
@@ -20,7 +20,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-01-17T07:58:31.671Z",
+    "time": "2018-01-17T08:22:36.876Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }
