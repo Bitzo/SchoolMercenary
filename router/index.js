@@ -4,6 +4,7 @@ const dv = require('../utils/dataValidator');
 const crypt = require('../utils/encrypt');
 const userService = require('../service/userService');
 const validAuth = require('../utils/validAuth');
+const apiAuth = require('../utils/apiAuth');
 
 const router = new Router();
 
@@ -13,6 +14,23 @@ router.get('/', (ctx) => {
     title: 'Home',
     name: 'Bitzo',
   });
+});
+
+/**
+ * 接口鉴权
+ */
+router.all('/api/*', async (ctx, next) => {
+  const result = await apiAuth.tokenCheck(ctx);
+  if (result && !result.isSuccess) {
+    ctx.status = 403;
+    ctx.body = {
+      status: 403,
+      isSuccess: false,
+      msg: result.msg,
+    };
+  } else {
+    await next();
+  }
 });
 
 /**

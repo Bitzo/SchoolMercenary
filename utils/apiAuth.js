@@ -9,7 +9,7 @@ const _ = require('lodash');
  */
 function urlPass(method, url) {
   console.log(method, url);
-  if (_.toUpper(method) === 'POST' && _.toLower(url) === '/api/register') return true;
+  if (_.toUpper(method) === 'POST' && _.toLower(url) === '/api/register/normal') return true;
   if (_.toUpper(method) === 'POST' && _.toLower(url) === '/api/login') return true;
   return false;
 }
