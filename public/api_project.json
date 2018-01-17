@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "apiDoc",
   "title": "apiDoc v1.0",
-  "url": "http://api.bitzo.cn:3001",
+  "url": "https://api.bitzo.cn",
   "order": [
     "User",
     "Task",
@@ -20,7 +20,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-01-17T08:22:36.876Z",
+    "time": "2018-01-17T08:35:49.881Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }
