@@ -12,3 +12,4 @@
 |:-:|:--:|:--|:---|
 |1   | POST | /api/register/normal |用户注册（常规）|
 |2   | POST | /api/login | 用户登录 |
+|3   | GET  | /api/users  | 用户信息查询  |

@@ -1,6 +1,7 @@
 const User = require('../db/models/userModel');
 const _ = require('lodash');
 const Sequelize = require('sequelize');
+const config = require('../config/config');
 
 const { Op } = Sequelize;
 
@@ -42,21 +43,25 @@ async function addUser(userInfo) {
  *
  * @return {boolean|array} 查询成功返回对象数组，查询失败则返回false
  */
-async function queryUsers(andParam = {}, orParam = []) {
+async function queryUsers(andParam = {}, orParam = [], page = 1, pageCount = config.pageCount) {
   try {
     let users = [];
     if (orParam.length === 0) {
-      users = await User.findAll({
+      users = await User.findAndCountAll({
         where: {
           [Op.and]: andParam,
         },
+        offset: (page - 1) * pageCount,
+        limit: pageCount,
       });
     } else {
-      users = await User.findAll({
+      users = await User.findAndCountAll({
         where: {
           [Op.and]: andParam,
           [Op.or]: orParam,
         },
+        offset: (page - 1) * pageCount,
+        limit: pageCount,
       });
     }
 

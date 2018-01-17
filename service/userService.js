@@ -1,7 +1,7 @@
 const userDAL = require('../dal/userDAL');
 const dv = require('../utils/dataValidator');
 const _ = require('lodash');
-
+const config = require('../config/config');
 /**
  * service_addUser
  * @param {object} userInfo
@@ -27,7 +27,6 @@ async function addUser(userInfo) {
   }
 }
 
-
 /**
  * service_queryUsers
  * @param {object} andParam
@@ -43,7 +42,7 @@ async function addUser(userInfo) {
  *
  * @return {boolean|array} 查询成功返回对象数组，查询失败则返回false
  */
-async function queryUsers(andParam = {}, orParam = []) {
+async function queryUsers(andParam = {}, orParam = [], page = 1, pageCount = config.pageCount) {
   const and = {};
   let or = [];
   _.forIn(andParam, (value, key) => {
@@ -55,7 +54,7 @@ async function queryUsers(andParam = {}, orParam = []) {
     or = orParam;
   }
   try {
-    return await userDAL.queryUsers(and, or);
+    return await userDAL.queryUsers(and, or, page, pageCount);
   } catch (err) {
     console.log(`Query User Failed: ${err}`);
     return false;

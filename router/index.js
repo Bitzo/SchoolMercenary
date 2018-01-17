@@ -37,7 +37,7 @@ router.post('/api/register/normal', async (ctx) => {
   }
 
   let result = await userService.queryUsers({ username });
-  if (!result || result.length) {
+  if (!result || result.count) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
@@ -101,8 +101,8 @@ router.post('/api/login', async (ctx) => {
     },
   ]);
 
-  if (result && result.length === 1) {
-    [result] = result;
+  if (result && result.count === 1) {
+    [result] = result.rows;
     const decryptPwd = await crypt.decrypt(result.password, result.key);
     if (decryptPwd === password) {
       const token = validAuth.getJWT({
@@ -133,6 +133,6 @@ router.post('/api/login', async (ctx) => {
   };
 });
 
-router.use('/api', usersRouter.routes());
+router.use('/api/users', usersRouter.routes());
 
 module.exports = router;

@@ -1634,7 +1634,7 @@
   {
     "type": "GET",
     "url": "/api/users",
-    "title": "*查询用户信息",
+    "title": "查询用户信息",
     "name": "QueryUsersInfo",
     "group": "User",
     "version": "1.0.0",
@@ -1674,14 +1674,6 @@
           {
             "group": "Parameter",
             "type": "String",
-            "size": "11",
-            "optional": true,
-            "field": "phoneNumber",
-            "description": "<p>手机号</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
             "size": "1..30",
             "optional": true,
             "field": "email",
@@ -1710,7 +1702,7 @@
       "examples": [
         {
           "title": "HTTP/1.1 200 OK",
-          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": \"msg\",\n  \"page\": 1， //当前页码\n  \"pageCount\": 20, //当前每页数据量\n  \"totalPage\": 10, //总页数\n  \"data\": [\n   {\n     \"id\": 10001,\n     \"username\": \"bitzo\",\n     \"nickName\": \"bitzo\",\n     \"email\": \"bitzo@qq.com\",\n     \"phoneNumber\": \"12345678901\",\n     \"avatar\": \"/img/default.png\",\n     \"birthday\": 2017-9-1,\n     \"desc\": \"asdsadsadas\",\n     \"love\": 20,\n     \"hate\": 1\n   },\n   ...\n  ]\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": \"msg\",\n  \"page\": 1， //当前页码\n  \"pageCount\": 20, //当前每页数据量\n  \"totalPage\": 10, //总页数\n  \"data\": [\n   {\n     \"id\": 10001,\n     \"gender\": \"男\",\n     \"username\": \"bitzo\",\n     \"nickName\": \"bitzo\",\n     \"email\": \"bitzo@qq.com\",\n     \"phoneNumber\": \"12345678901\",\n     \"avatar\": \"/img/default.png\",\n     \"birthday\": 2017-9-1,\n     \"desc\": \"asdsadsadas\",\n     \"love\": 20,\n     \"hate\": 1\n   },\n   ...\n  ]\n}",
           "type": "json"
         }
       ]
