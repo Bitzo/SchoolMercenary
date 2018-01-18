@@ -1,5 +1,8 @@
 const Router = require('koa-router');
 const _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
+const fileUtils = require('../../utils/fileUtils');
 const moment = require('moment');
 const userService = require('../../service/userService');
 const config = require('../../config/config');
@@ -132,6 +135,62 @@ router.put('/:id', async (ctx) => {
       msg: '修改失败',
     };
   }
+});
+
+/**
+ * @api 修改用户头像
+ * @param {Object} file
+ */
+router.put('/avatar/:id', async (ctx) => {
+  const id = _.toNumber(ctx.params.id);
+
+  if (id !== ctx.token.id) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '没有权限',
+    };
+    return;
+  }
+  const dir = 'public/img/avatar';
+  const filename = `${moment().format('YYYYMMDDHHmmss')}${ctx.token.id}${Math.floor(Math.random() * 100)}`;
+  let res = await fileUtils.saveFile(ctx, 'avatar', dir, filename, 'image', 2);
+  console.log(res);
+  if (res.isSuccess) {
+    let userInfo = await userService.queryUsers({ id });
+    [userInfo] = userInfo.rows;
+    const originFile = userInfo.avatar;
+    if (originFile !== '/img/avatar.jpg') {
+      const file = path.join(APP_PATH, `/public${originFile}`);
+      if (fs.existsSync(file)) {
+        fs.unlinkSync(file);
+      }
+    }
+    res = await userService.updateUser({ id, avatar: `/img/avatar/${res.data}` });
+    if (res) {
+      ctx.status = 200;
+      ctx.body = {
+        status: 200,
+        isSuccess: true,
+        msg: '修改成功',
+      };
+      return;
+    }
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '上传失败',
+    };
+    return;
+  }
+  ctx.status = 400;
+  ctx.body = {
+    status: 400,
+    isSuccess: false,
+    msg: res.data,
+  };
 });
 
 module.exports = router;

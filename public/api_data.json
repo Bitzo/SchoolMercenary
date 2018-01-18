@@ -1727,7 +1727,7 @@
   {
     "type": "PUT",
     "url": "/api/users/avatar/:id",
-    "title": "*修改用户头像",
+    "title": "修改用户头像",
     "name": "UpdateUserAvatar",
     "group": "User",
     "version": "1.0.0",

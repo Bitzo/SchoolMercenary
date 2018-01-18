@@ -2,9 +2,11 @@ const Koa = require('koa');
 const router = require('./router');
 const views = require('koa-views');
 const bodyparser = require('koa-bodyparser');
+const koaBody = require('koa-body');
 const statics = require('koa-static');
 const path = require('path');
 const config = require('./config/config');
+require('./GLOBAL_VALS');
 
 const app = new Koa();
 
@@ -18,6 +20,7 @@ app.use(views(path.join(__dirname, '/public'), {
 
 app.use(statics(path.join(__dirname, staticFIlesPath)));
 
+app.use(koaBody({ multipart: true }));
 // body handler, resolve post data
 app.use(bodyparser());
 
