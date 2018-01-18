@@ -1780,6 +1780,60 @@
   },
   {
     "type": "PUT",
+    "url": "/api/users/password/:id",
+    "title": "*修改用户密码",
+    "name": "UpdateUserPwd",
+    "group": "User",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "token",
+            "description": ""
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "size": "...20",
+            "optional": false,
+            "field": "password",
+            "description": "<p>密码</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "HTTP/1.1 200 OK",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": \"msg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Bad Request:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": 400,\n  \"isSuccess\": false,\n  \"msg\": \"errorMsg\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Forbidden:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"status\": 403,\n  \"isSuccess\": false,\n  \"msg\": \"tokenError\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "api/UserApi.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "PUT",
     "url": "/api/users/:id",
     "title": "修改用户信息",
     "name": "UpdateUserinfo",
