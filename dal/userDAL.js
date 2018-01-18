@@ -73,7 +73,41 @@ async function queryUsers(andParam = {}, orParam = [], page = 1, pageCount = con
   }
 }
 
+/**
+ * db_updateUser
+ * @param {object} userInfo
+ * @param {number} userInfo.id 用户id
+ * @param {string=} userInfo.password 密码
+ * @param {string=} userInfo.key 密钥
+ * @param {string=} userInfo.username 用户名
+ * @param {string=} userInfo.email 邮箱
+ * @param {boolean=1} userInfo.gender 性别
+ * @param {date=} userInfo.birthday 生日
+ * @param {string=} userInfo.descrption 个性签名
+ * @param {string=1} userInfo.isActive 是否有效
+ *
+ * @return {boolean|object}
+ */
+async function updateUser(userInfo) {
+  try {
+    let result = await User.update(
+      _.omit(userInfo, 'id'),
+      {
+        where: {
+          id: userInfo.id,
+        },
+      },
+    );
+    [result] = result;
+    return result;
+  } catch (err) {
+    console.log(`Update User Error: ${err}`);
+    return false;
+  }
+}
+
 module.exports = {
   addUser,
   queryUsers,
+  updateUser,
 };

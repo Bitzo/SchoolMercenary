@@ -10,7 +10,7 @@ function getJWT(userInfo) {
   return jwt.sign({
     data: userInfo,
   }, config.secret, {
-    expiresIn: '30m',
+    expiresIn: '1h',
   });
 }
 

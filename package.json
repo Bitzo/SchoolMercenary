@@ -17,6 +17,7 @@
     "koa-static": "^4.0.2",
     "koa-views": "^6.1.2",
     "lodash": "^4.17.4",
+    "moment": "^2.20.1",
     "mysql2": "^1.5.1",
     "sequelize": "^4.26.0"
   }
