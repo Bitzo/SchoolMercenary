@@ -1781,7 +1781,7 @@ define({ "api": [
   {
     "type": "PUT",
     "url": "/api/users/:id",
-    "title": "*修改用户信息",
+    "title": "修改用户信息",
     "name": "UpdateUserinfo",
     "group": "User",
     "version": "1.0.0",
@@ -1891,7 +1891,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"token\": \"\"\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"token\": \"\",\n  \"userInfo\": {\n     \"id\": 22,\n     \"gender\": \"男\",\n     \"username\": \"bitzo\",\n     \"nickname\": \"asd\",\n     ...\n  }\n}",
           "type": "json"
         }
       ]

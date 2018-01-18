@@ -1,4 +1,5 @@
 const Router = require('koa-router');
+const _ = require('lodash');
 const usersRouter = require('./api/users');
 const dv = require('../utils/dataValidator');
 const crypt = require('../utils/encrypt');
@@ -210,11 +211,15 @@ router.post('/api/login', async (ctx) => {
         id: result.id,
         username: result.username,
       });
+      let userInfo = await userService.queryUsers({ id: result.id });
+      [userInfo] = userInfo.rows;
+      userInfo = _.omit(userInfo, ['password', 'key', 'isActive', 'createTime', 'role']);
       ctx.body = {
         status: 200,
         isSuccess: true,
         msg: '登录成功',
         token,
+        userInfo,
       };
       return;
     }
@@ -224,6 +229,7 @@ router.post('/api/login', async (ctx) => {
       isSuccess: false,
       msg: '登录失败',
     };
+    return;
   }
 
   ctx.status = 400;
