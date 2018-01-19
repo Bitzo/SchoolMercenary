@@ -6,6 +6,7 @@ const koaBody = require('koa-body');
 const statics = require('koa-static');
 const path = require('path');
 const config = require('./config/config');
+const moment = require('moment');
 require('./GLOBAL_VALS');
 
 const app = new Koa();
@@ -30,10 +31,17 @@ app.use(router.routes());
 // handle 404 page
 app.use(async (ctx) => {
   ctx.response.status = 404;
+  const date = moment().format('YY/MM/DD HH:mm:ss');
+  console.log(`
+    ===  Error  =============================================
+    | ${date}:  {${ctx.method}} ${ctx.url}
+    =========================================================`);
   // ctx.body = 'Oops, Not Found!';
-  await ctx.render('404', {
-    // user: 'John',
-  });
+  ctx.body = `
+      <h1>Page Can Not Found!</h1>
+      <h2>Please check API Doc.</h2>
+      <h2>${date}:  {${ctx.method}} ${ctx.url}</h2>
+  `;
 });
 
 app.listen(config.port);

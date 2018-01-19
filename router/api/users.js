@@ -85,7 +85,7 @@ router.get('/', async (ctx) => {
  * @param {date} birthday
  * @param {string} desc
  */
-router.put('/:id', async (ctx) => {
+router.put('/:id', async (ctx, next) => {
   const {
     nickname,
     gender,
@@ -94,6 +94,11 @@ router.put('/:id', async (ctx) => {
   } = ctx.request.body;
 
   const id = _.toNumber(ctx.params.id);
+
+  if (Number.isNaN(id)) {
+    next();
+    return;
+  }
 
   if (id !== ctx.token.id) {
     ctx.body = {
@@ -199,15 +204,20 @@ router.put('/avatar/:id', async (ctx) => {
  * @param {Integer} id
  * @param {string} password
  */
-router.put('/password/:id', async (ctx) => {
+router.put('/password/:id', async (ctx, next) => {
   const id = _.toNumber(ctx.params.id);
+
+  if (Number.isNaN(id)) {
+    next();
+    return;
+  }
 
   if (id !== ctx.token.id) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
       isSuccess: false,
-      msg: '没有权限',
+      msg: '没有权限1',
     };
     return;
   }
