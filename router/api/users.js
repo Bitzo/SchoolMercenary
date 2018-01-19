@@ -7,6 +7,7 @@ const moment = require('moment');
 const userService = require('../../service/userService');
 const config = require('../../config/config');
 const dv = require('../../utils/dataValidator');
+const encrypt = require('../../utils/encrypt');
 
 const router = new Router();
 
@@ -190,6 +191,56 @@ router.put('/avatar/:id', async (ctx) => {
     status: 400,
     isSuccess: false,
     msg: res.data,
+  };
+});
+
+/**
+ * @api 修改密码
+ * @param {Integer} id
+ * @param {string} password
+ */
+router.put('/password/:id', async (ctx) => {
+  const id = _.toNumber(ctx.params.id);
+
+  if (id !== ctx.token.id) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '没有权限',
+    };
+    return;
+  }
+
+  const { password } = ctx.request.body;
+
+  if (dv.isParamsInvalid({ password })) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '密码不合法',
+    };
+    return;
+  }
+
+  const { encrypted, key } = await encrypt.encrypt(password);
+
+  const result = await userService.updateUser({ password: encrypted, key, id });
+
+  if (result !== false) {
+    ctx.body = {
+      status: 200,
+      isSuccess: true,
+      msg: '修改成功',
+    };
+    return;
+  }
+  ctx.status = 400;
+  ctx.body = {
+    status: 400,
+    isSuccess: false,
+    msg: '修改失败',
   };
 });
 

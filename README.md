@@ -15,3 +15,4 @@
 |3   | GET  | /api/users  | 用户信息查询  |
 |4   | PUT  | /api/users/:id  | 用户基本信息修改 |
 |5   | PUT  | /api/users/avatar/:id  | 修改头像  |
+|6   | PUT  | /api/users/password/:id  | 修改密码  |
