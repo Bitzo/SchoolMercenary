@@ -1781,7 +1781,7 @@ define({ "api": [
   {
     "type": "PUT",
     "url": "/api/users/password/:id",
-    "title": "*修改用户密码",
+    "title": "修改用户密码",
     "name": "UpdateUserPwd",
     "group": "User",
     "version": "1.0.0",
