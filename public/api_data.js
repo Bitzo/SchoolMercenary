@@ -2128,7 +2128,7 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/api/register/phoneCode",
-    "title": "*用户注册-获取手机验证码",
+    "title": "用户注册-获取手机验证码",
     "name": "UserRegister_getPhoneCode",
     "group": "User",
     "version": "1.0.0",
@@ -2208,6 +2208,13 @@ define({ "api": [
             "optional": false,
             "field": "password",
             "description": "<p>密码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Integer",
+            "optional": false,
+            "field": "code",
+            "description": "<p>验证码</p>"
           }
         ]
       }
