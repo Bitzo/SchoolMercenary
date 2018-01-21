@@ -11,6 +11,7 @@ function urlPass(method, url) {
   console.log(method, url);
   if (_.toUpper(method) === 'POST' && _.toLower(url) === '/api/register/normal') return true;
   if (_.toUpper(method) === 'POST' && _.toLower(url) === '/api/register/phone') return true;
+  if (_.toUpper(method) === 'POST' && _.toLower(url) === '/api/register/phonecode') return true;
   if (_.toUpper(method) === 'POST' && _.toLower(url) === '/api/login') return true;
   return false;
 }

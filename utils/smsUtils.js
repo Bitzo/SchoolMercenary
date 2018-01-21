@@ -1,7 +1,7 @@
 const { smsConfig } = require('../config/config');
 const axios = require('axios');
 
-async function sendSMS() {
+async function sendSMS(phoneNumber, code) {
   const options = {
     url: 'https://open.ucpaas.com/ol/sms/sendsms',
     method: 'POST',
@@ -10,8 +10,8 @@ async function sendSMS() {
       token: smsConfig.authToken,
       appid: smsConfig.appID,
       templateid: '273472',
-      param: '1010,3',
-      mobile: '15651837665',
+      param: `${code},3分钟`,
+      mobile: phoneNumber,
       uid: '',
     },
     headers: {

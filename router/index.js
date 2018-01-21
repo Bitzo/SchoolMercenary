@@ -5,7 +5,7 @@ const crypt = require('../utils/encrypt');
 const userService = require('../service/userService');
 const validAuth = require('../utils/validAuth');
 const apiAuth = require('../utils/apiAuth');
-
+const smsUtils = require('../utils/smsUtils');
 const usersRouter = require('./api/users');
 const messagesRouter = require('./api/message');
 
@@ -93,18 +93,110 @@ router.post('/api/register/normal', async (ctx) => {
 });
 
 /**
+ * @api 获取手机验证码
+ * @param {string} phoneNumber
+ */
+router.post('/api/register/phoneCode', async (ctx) => {
+  const { phoneNumber } = ctx.request.body;
+
+  if (dv.isParamsInvalid({ phoneNumber })) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '{phoneNumber} 无效',
+    };
+    return;
+  }
+
+  if (!dv.isPoneAvailable(phoneNumber)) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '手机号无效',
+    };
+    return;
+  }
+
+  let result = await userService.queryUsers({ phoneNumber });
+  if (result !== false) {
+    if (result.count > 0) {
+      ctx.status = 400;
+      ctx.body = {
+        status: 400,
+        isSuccess: false,
+        msg: '手机号已注册',
+      };
+      return;
+    }
+    ctx.session.code = Math.floor((Math.random() * 9000) + 1000);
+    ctx.session.phoneNumber = phoneNumber;
+    const { code } = ctx.session;
+    console.log(code);
+    result = smsUtils.sendSMS(phoneNumber, code);
+    if (result) {
+      ctx.body = {
+        status: 200,
+        isSuccess: true,
+        msg: '发送成功',
+      };
+      return;
+    }
+  }
+  ctx.status = 400;
+  ctx.body = {
+    status: 400,
+    isSuccess: false,
+    msg: '系统错误, 发送失败',
+  };
+});
+
+/**
  * @api 用户注册-手机注册
  * @param {string} username
  * @param {password} password
  */
 router.post('/api/register/phone', async (ctx) => {
   const {
-    username,
     password,
     nickname,
     phoneNumber,
+    code,
   } = ctx.request.body;
 
+  if (!ctx.session.phoneNumber || ctx.session.phoneNumber !== phoneNumber) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '手机号码异常',
+    };
+    return;
+  }
+
+  console.log(ctx.session.code);
+  if (!ctx.session.code) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '验证码过期',
+    };
+    return;
+  }
+
+  if (_.toNumber(code) !== ctx.session.code) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '验证码错误',
+    };
+    return;
+  }
+
+  const username = phoneNumber;
   const userInfo = {
     username,
     password,

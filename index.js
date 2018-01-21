@@ -7,6 +7,8 @@ const statics = require('koa-static');
 const path = require('path');
 const config = require('./config/config');
 const moment = require('moment');
+const session = require('koa-session2');
+const Store = require('./utils/redisUtils');
 require('./GLOBAL_VALS');
 
 const app = new Koa();
@@ -20,6 +22,13 @@ app.use(views(path.join(__dirname, '/public'), {
 }));
 
 app.use(statics(path.join(__dirname, staticFIlesPath)));
+
+// session
+app.use(session({
+  key: 'SESSIONID',
+  store: new Store(),
+  maxAge: '1800000',
+}));
 
 app.use(koaBody({ multipart: true }));
 // body handler, resolve post data
