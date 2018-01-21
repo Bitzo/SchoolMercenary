@@ -289,6 +289,61 @@
     "groupTitle": "Backend"
   },
   {
+    "type": "POST",
+    "url": "/api/manage/message",
+    "title": "*新增消息",
+    "name": "addMsg",
+    "group": "Backend",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "...50",
+            "optional": false,
+            "field": "title",
+            "description": "<p>消息标题</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "...200",
+            "optional": false,
+            "field": "content",
+            "description": "<p>消息内容</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success Response",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": ’添加成功'\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Error-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": 400,\n  \"isSuccess\": false,\n  \"msg\": \"errorMsg\",\n}",
+          "type": "json"
+        },
+        {
+          "title": "Forbidden:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"status\": 403,\n  \"isSuccess\": false,\n  \"msg\": \"tokenError\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "api/BackendApi.js",
+    "groupTitle": "Backend"
+  },
+  {
     "type": "DELETE",
     "url": "/api/manage/message/:id",
     "title": "*删除消息",
@@ -460,7 +515,7 @@
           {
             "group": "Parameter",
             "type": "Number",
-            "optional": false,
+            "optional": true,
             "field": "id",
             "description": "<p>消息Id</p>"
           },
@@ -468,7 +523,7 @@
             "group": "Parameter",
             "type": "String",
             "size": "...50",
-            "optional": false,
+            "optional": true,
             "field": "title",
             "description": "<p>消息标题</p>"
           },
@@ -476,35 +531,35 @@
             "group": "Parameter",
             "type": "String",
             "size": "...200",
-            "optional": false,
-            "field": "cpntent",
+            "optional": true,
+            "field": "content",
             "description": "<p>消息内容</p>"
           },
           {
             "group": "Parameter",
             "type": "Number",
-            "optional": false,
+            "optional": true,
             "field": "uId",
             "description": "<p>发布者Id</p>"
           },
           {
             "group": "Parameter",
             "type": "Number",
-            "optional": false,
+            "optional": true,
             "field": "status",
             "description": "<p>消息状态</p>"
           },
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "startTime",
             "description": "<p>消息发布时间start</p>"
           },
           {
             "group": "Parameter",
             "type": "Date",
-            "optional": false,
+            "optional": true,
             "field": "endTime",
             "description": "<p>消息发布时间end</p>"
           },
@@ -992,7 +1047,7 @@
   {
     "type": "GET",
     "url": "/api/message",
-    "title": "*查询通知",
+    "title": "查询通知",
     "name": "QueryMessages",
     "group": "Message",
     "version": "1.0.0",
@@ -1010,7 +1065,7 @@
             "group": "Parameter",
             "type": "String",
             "size": "...50",
-            "optional": false,
+            "optional": true,
             "field": "title",
             "description": "<p>标题</p>"
           },

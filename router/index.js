@@ -1,11 +1,13 @@
 const Router = require('koa-router');
 const _ = require('lodash');
-const usersRouter = require('./api/users');
 const dv = require('../utils/dataValidator');
 const crypt = require('../utils/encrypt');
 const userService = require('../service/userService');
 const validAuth = require('../utils/validAuth');
 const apiAuth = require('../utils/apiAuth');
+
+const usersRouter = require('./api/users');
+const messagesRouter = require('./api/message');
 
 const router = new Router();
 
@@ -241,5 +243,7 @@ router.post('/api/login', async (ctx) => {
 });
 
 router.use('/api/users', usersRouter.routes());
+router.use('/api/messages', messagesRouter.routes());
+
 
 module.exports = router;

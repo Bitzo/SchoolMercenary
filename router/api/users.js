@@ -37,20 +37,28 @@ router.get('/', async (ctx) => {
 
   let { page = 1, pageCount = config.pageCount } = ctx.query;
 
-  const err = dv.isParamsInvalid({ page, pageCount });
+  page = _.toNumber(page);
+  pageCount = _.toNumber(pageCount);
 
-  if (err) {
+  if (Number.isNaN(page)) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
       isSuccess: false,
-      msg: `${err} 参数有误`,
+      msg: 'page 参数有误',
     };
     return;
   }
 
-  page = _.toNumber(page);
-  pageCount = _.toNumber(pageCount);
+  if (Number.isNaN(pageCount)) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'pageCount 参数有误',
+    };
+    return;
+  }
 
   let users = await userService.queryUsers(userInfo, [], page, pageCount);
 
@@ -217,7 +225,7 @@ router.put('/password/:id', async (ctx, next) => {
     ctx.body = {
       status: 400,
       isSuccess: false,
-      msg: '没有权限1',
+      msg: '没有权限',
     };
     return;
   }

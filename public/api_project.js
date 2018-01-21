@@ -1,8 +1,8 @@
 define({
-  "name": "apiDoc v1.0",
+  "name": "校园佣兵",
   "version": "1.0.1",
-  "description": "apiDoc",
-  "title": "apiDoc v1.0",
+  "description": "apiDoc v1.0",
+  "title": "校园佣兵 APIDoc v1.0",
   "url": "https://api.bitzo.cn",
   "order": [
     "User",
@@ -20,7 +20,7 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-01-19T07:51:07.198Z",
+    "time": "2018-01-21T07:50:44.074Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }
