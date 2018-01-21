@@ -9,6 +9,7 @@
   "author": "bitzo",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.17.1",
     "jade": "^1.11.0",
     "jsonwebtoken": "^8.1.0",
     "koa": "^2.4.1",
