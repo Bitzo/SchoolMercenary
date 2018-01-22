@@ -25,6 +25,7 @@ async function queryMsg(andParam = {}, orParam = [], page = 1, pageCount = confi
         include: [
           {
             model: Users,
+            attributes: ['username'],
             required: true,
           },
         ],

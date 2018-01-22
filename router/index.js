@@ -8,7 +8,7 @@ const apiAuth = require('../utils/apiAuth');
 const smsUtils = require('../utils/smsUtils');
 const usersRouter = require('./api/users');
 const messagesRouter = require('./api/message');
-
+const dicRouter = require('./api/dicRouter');
 const router = new Router();
 
 router.get('/', (ctx) => {
@@ -336,6 +336,6 @@ router.post('/api/login', async (ctx) => {
 
 router.use('/api/users', usersRouter.routes());
 router.use('/api/messages', messagesRouter.routes());
-
+router.use('/api/dictionary', dicRouter.routes());
 
 module.exports = router;
