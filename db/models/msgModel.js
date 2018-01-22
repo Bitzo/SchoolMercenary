@@ -14,20 +14,25 @@ const message = sequelize.define('message', {
     allowNull: false,
   },
   content: {
-    type: Sequelize.STRING(50),
+    type: Sequelize.STRING(200),
     allowNull: false,
   },
   uId: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
+    references: {
+      model: 'users',
+      key: 'id',
+    },
   },
   status: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER(1),
     allowNull: false,
-    defaultValue: 1,
+    defaultValue: 0,
   },
   createTime: {
     type: Sequelize.DATE,
+    allowNull: false,
   },
 }, {
   createdAt: 'createTime',

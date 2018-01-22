@@ -16,4 +16,6 @@
 |4   | PUT  | /api/users/:id  | 用户基本信息修改 |
 |5   | PUT  | /api/users/avatar/:id  | 修改头像  |
 |6   | PUT  | /api/users/password/:id  | 修改密码  |
-|7   | GET  | /api/messages  | 查询通知  |
+|7   | POST | /api/register/phoneCode  | 获取验证码  |
+|8   | POST | /api/register/phone  | 手机注册  |
+|9   | GET  | /api/messages  | 查询通知  |

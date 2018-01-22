@@ -24,7 +24,7 @@ const user = sequelize.define('user', {
     },
   },
   phoneNumber: {
-    type: Sequelize.STRING(11),
+    type: Sequelize.CHAR(11),
     allowNull: true,
     validate: {
       isNumeric: true,
@@ -60,7 +60,7 @@ const user = sequelize.define('user', {
     },
   },
   birthday: {
-    type: Sequelize.DATE,
+    type: Sequelize.DATEONLY,
     allowNull: true,
   },
   desc: {
