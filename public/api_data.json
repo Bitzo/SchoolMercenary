@@ -838,6 +838,67 @@
     "groupTitle": "Backend"
   },
   {
+    "type": "GET",
+    "url": "/api/dictionary",
+    "title": "查询字典",
+    "name": "QueryDictionary",
+    "group": "Dictionary",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "size": "...10",
+            "optional": true,
+            "field": "category",
+            "description": "<p>分类</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": true,
+            "field": "id",
+            "description": "<p>父级节点的id</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "HTTP/1.1 200 OK",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": \"msg\",\n  \"data\": [\n      {\n       \"id\": 1,\n       \"level\": 1,\n       \"category\": \"province\",\n       \"code\": \"JiangSu\",\n       \"value\": \"江苏省\",\n       \"createTime\": \"2018-01-22\",\n       \"parent\": 0,\n       \"isActive\": 1\n     },\n     {\n       \"id\": 2,\n       \"level\": 1,\n       \"category\": \"province\",\n       \"code\": \"ZheJiang\",\n       \"value\": \"浙江省\",\n       \"createTime\": \"2018-01-22\",\n       \"parent\": 0,\n       \"isActive\": 1\n     },\n     {\n       \"id\": 5,\n       \"level\": 1,\n       \"category\": \"province\",\n       \"code\": \"AnHui\",\n       \"value\": \"安徽省\",\n       \"createTime\": \"2018-01-22\",\n       \"parent\": 0,\n       \"isActive\": 1\n     },\n     ...\n  ]\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Bad Request:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": 400,\n  \"isSuccess\": false,\n  \"msg\": \"errorMsg\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Forbidden:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"status\": 403,\n  \"isSuccess\": false,\n  \"msg\": \"tokenError\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "api/MessageApi.js",
+    "groupTitle": "Dictionary"
+  },
+  {
     "type": "POST",
     "url": "/api/evaluate",
     "title": "*评价曾参与过的任务",
