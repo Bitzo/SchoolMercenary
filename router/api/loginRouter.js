@@ -9,7 +9,7 @@ const router = new Router();
 
 /**
  * @api 用户登录
- * @param {string} username
+ * @param {string} account
  * @param {string} password
  */
 router.post('/', async (ctx) => {

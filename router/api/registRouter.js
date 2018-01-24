@@ -10,7 +10,8 @@ const router = new Router();
 /**
  * @api 用户注册-常规法
  * @param {string} username
- * @param {password} password
+ * @param {string} password
+ * @param {string} nickname
  */
 router.post('/normal', async (ctx) => {
   const { username, password, nickname } = ctx.request.body;
@@ -124,8 +125,10 @@ router.post('/phoneCode', async (ctx) => {
 
 /**
  * @api 用户注册-手机注册
- * @param {string} username
- * @param {password} password
+ * @param {string} nickname
+ * @param {string} phoneNumber
+ * @param {string} code
+ * @param {string} password
  */
 router.post('/phone', async (ctx) => {
   const {
