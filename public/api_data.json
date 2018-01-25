@@ -977,10 +977,13 @@
   {
     "type": "PUT",
     "url": "/api/evaluate/:userId",
-    "title": "*评价用户",
+    "title": "评价用户",
     "name": "EvaluateUser",
     "group": "Evaluate",
     "version": "1.0.0",
+    "deprecated": {
+      "content": "暂时弃用此接口"
+    },
     "parameter": {
       "fields": {
         "Parameter": [

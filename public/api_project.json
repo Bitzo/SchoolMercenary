@@ -9,6 +9,7 @@
     "Task",
     "TaskUser",
     "Evaluate",
+    "Dictionary",
     "Message"
   ],
   "template": {
@@ -20,7 +21,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2018-01-22T13:06:06.822Z",
+    "time": "2018-01-25T06:47:38.493Z",
     "url": "http://apidocjs.com",
     "version": "0.17.6"
   }
