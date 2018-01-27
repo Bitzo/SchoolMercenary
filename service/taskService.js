@@ -51,15 +51,15 @@ async function queryTasks(andParam = {}, orParam = [], page = 1, pageCount = con
  * @return {boolean|object} 新增成功返回插入的数据基本信息
  *                          失败则返回false
  */
-async function addTask(userInfo) {
+async function addTask(taskInfo) {
   const info = {};
-  _.forIn(userInfo, (value, key) => {
+  _.forIn(taskInfo, (value, key) => {
     if (dv.isParamsValid({ value })) {
       info[key] = value;
     }
   });
   try {
-    return await taskDAL.addTask(userInfo);
+    return await taskDAL.addTask(taskInfo);
   } catch (err) {
     console.log(`Add Task Failed: ${err}`);
     return false;

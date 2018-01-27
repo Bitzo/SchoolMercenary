@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const _ = require('lodash');
 const Task = require('../db/models/tasksModle');
 const config = require('../config/config');
+const User = require('./userDAL');
 
 const { Op } = Sequelize;
 
@@ -57,6 +58,13 @@ async function queryTasks(andParam = {}, orParam = [], page = 1, pageCount = con
         },
         offset: (page - 1) * pageCount,
         limit: pageCount,
+        include: [
+          {
+            model: User,
+            attributes: ['username'],
+            required: true,
+          },
+        ],
       });
     } else {
       tasks = await Task.findAndCountAll({
@@ -66,6 +74,13 @@ async function queryTasks(andParam = {}, orParam = [], page = 1, pageCount = con
         },
         offset: (page - 1) * pageCount,
         limit: pageCount,
+        include: [
+          {
+            model: User,
+            attributes: ['username'],
+            required: true,
+          },
+        ],
       });
     }
 

@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../db');
 const user = require('./userModel');
 const dictionary = require('./dicModel');
+const moment = require('moment');
 
 const task = sequelize.define('task', {
   id: {
@@ -36,8 +37,12 @@ const task = sequelize.define('task', {
     defaultValue: '1',
   },
   time: {
-    type: Sequelize.DATEONLY,
+    type: Sequelize.DATE,
     allowNull: false,
+    get() {
+      const date = this.getDataValue('time');
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   count: {
     type: Sequelize.INTEGER(11),
@@ -56,10 +61,18 @@ const task = sequelize.define('task', {
   createTime: {
     type: Sequelize.DATEONLY,
     allowNull: false,
+    get() {
+      const date = this.getDataValue('createTime');
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   editTime: {
     type: Sequelize.DATEONLY,
     allowNull: false,
+    get() {
+      const date = this.getDataValue('editTime');
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
 }, {
   tableName: 'tasks',

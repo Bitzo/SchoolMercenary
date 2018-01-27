@@ -5,6 +5,7 @@ const messagesRouter = require('./api/message');
 const dicRouter = require('./api/dicRouter');
 const registRouter = require('./api/registRouter');
 const loginRouter = require('./api/loginRouter');
+const taskRouter = require('./api/taskRouter');
 
 const router = new Router();
 
@@ -38,5 +39,6 @@ router.use('/api/messages', messagesRouter.routes());
 router.use('/api/dictionary', dicRouter.routes());
 router.use('/api/register', registRouter.routes());
 router.use('/api/login', loginRouter.routes());
+router.use('/api/tasks', taskRouter.routes());
 
 module.exports = router;

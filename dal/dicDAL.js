@@ -25,11 +25,7 @@ async function queryDic(param) {
  */
 async function queryDicByID(id) {
   try {
-    let result = await Dictionary.findAndCountAll({
-      where: {
-        id,
-      },
-    });
+    let result = await Dictionary.findById(id);
     result = JSON.parse(JSON.stringify(result));
     return result;
   } catch (err) {
