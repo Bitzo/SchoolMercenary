@@ -1234,7 +1234,7 @@
   {
     "type": "POST",
     "url": "/api/tasks",
-    "title": "*发布任务",
+    "title": "发布任务",
     "name": "PostTask",
     "group": "Task",
     "version": "1.0.0",
