@@ -21,7 +21,7 @@ router.get('/', async (ctx) => {
   page = _.toNumber(page);
   pageCount = _.toNumber(pageCount);
 
-  if (Number.isNaN(page)) {
+  if (Number.isNaN(page) || page < 1) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
@@ -31,7 +31,7 @@ router.get('/', async (ctx) => {
     return;
   }
 
-  if (Number.isNaN(pageCount)) {
+  if (Number.isNaN(pageCount) || pageCount < 1) {
     ctx.status = 400;
     ctx.body = {
       status: 400,

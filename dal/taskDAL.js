@@ -2,7 +2,8 @@ const Sequelize = require('sequelize');
 const _ = require('lodash');
 const Task = require('../db/models/tasksModle');
 const config = require('../config/config');
-const User = require('./userDAL');
+const User = require('../db/models/userModel');
+const dictionary = require('../db/models/dicModel');
 
 const { Op } = Sequelize;
 
@@ -56,15 +57,20 @@ async function queryTasks(andParam = {}, orParam = [], page = 1, pageCount = con
         where: {
           [Op.and]: andParam,
         },
-        offset: (page - 1) * pageCount,
-        limit: pageCount,
         include: [
           {
             model: User,
-            attributes: ['username'],
+            attributes: ['nickname'],
             required: true,
           },
+          {
+            model: dictionary,
+            attributes: ['value'],
+            require: true,
+          },
         ],
+        offset: (page - 1) * pageCount,
+        limit: pageCount,
       });
     } else {
       tasks = await Task.findAndCountAll({
@@ -77,17 +83,29 @@ async function queryTasks(andParam = {}, orParam = [], page = 1, pageCount = con
         include: [
           {
             model: User,
-            attributes: ['username'],
+            attributes: ['nickname'],
             required: true,
+          },
+          {
+            model: dictionary,
+            attributes: ['value'],
+            require: true,
           },
         ],
       });
     }
-
     tasks = JSON.parse(JSON.stringify(tasks));
+    const rows = tasks.rows.map((item) => {
+      let temp = item;
+      temp.username = item.user.nickname;
+      temp.dicValue = item.dictionary.value;
+      temp = _.omit(temp, ['user', 'dictionary']);
+      return temp;
+    });
+    tasks.rows = rows;
     return tasks;
   } catch (err) {
-    console.log(err);
+    console.log(`Query Tasks Error: ${err}`);
     return false;
   }
 }

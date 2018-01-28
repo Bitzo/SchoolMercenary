@@ -14,6 +14,10 @@ const task = sequelize.define('task', {
   uId: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
+    references: {
+      model: 'user',
+      key: 'id',
+    },
   },
   title: {
     type: Sequelize.STRING(50),
@@ -86,7 +90,7 @@ task.belongsTo(user, {
 });
 
 task.belongsTo(dictionary, {
-  foreignKey: 'tackType',
+  foreignKey: 'taskType',
   targetKet: 'id',
 });
 
