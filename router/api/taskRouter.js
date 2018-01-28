@@ -111,6 +111,12 @@ router.post('/', async (ctx) => {
 router.get('/', async (ctx) => {
   const { id, title, username } = ctx.query;
   let { page = 1, pageCount = config.pageCount } = ctx.query;
+  const taskInfo = {
+    id,
+    title,
+    username,
+    isActive: 1,
+  };
 
   page = _.toNumber(page);
   pageCount = _.toNumber(pageCount);
@@ -135,7 +141,7 @@ router.get('/', async (ctx) => {
     return;
   }
 
-  const result = await taskService.queryTasks({ id, title, username }, [], page, pageCount);
+  const result = await taskService.queryTasks(taskInfo, [], page, pageCount);
 
   if (!result) {
     ctx.status = 400;
@@ -152,7 +158,69 @@ router.get('/', async (ctx) => {
     status: 200,
     isSuccess: true,
     msg: '查询成功',
+    page,
+    pageCount,
+    totalPage: Math.ceil(result.count / pageCount),
     data: result.rows,
+  };
+});
+
+router.delete('/:id', async (ctx) => {
+  let { id } = ctx.params;
+
+  id = _.toNumber(id);
+
+  if (id < 1) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'id 错误！',
+    };
+    return;
+  }
+
+  let result = await taskService.queryTasks({ id });
+
+  if (!result) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '任务不存在',
+    };
+    return;
+  }
+
+  const uId = _.toNumber(result.rows[0].uId);
+
+  if (uId !== ctx.token.id) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '没有权限',
+    };
+    return;
+  }
+
+  result = await taskService.updateTask({ id, isActive: 0 });
+
+  if (!result) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '系统错误！',
+    };
+    return;
+  }
+
+  ctx.status = 200;
+  ctx.body = {
+    status: 200,
+    isSuccess: true,
+    msg: '删除成功！',
   };
 });
 

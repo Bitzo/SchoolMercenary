@@ -99,7 +99,7 @@ async function queryTasks(andParam = {}, orParam = [], page = 1, pageCount = con
       let temp = item;
       temp.username = item.user.nickname;
       temp.dicValue = item.dictionary.value;
-      temp = _.omit(temp, ['user', 'dictionary']);
+      temp = _.omit(temp, ['user', 'dictionary', 'isActive']);
       return temp;
     });
     tasks.rows = rows;

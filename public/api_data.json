@@ -1181,7 +1181,7 @@
   {
     "type": "DELETE",
     "url": "/api/tasks/:id",
-    "title": "*删除任务",
+    "title": "删除任务",
     "name": "DeleteTask",
     "group": "Task",
     "version": "1.0.0",
@@ -1326,7 +1326,7 @@
   {
     "type": "GET",
     "url": "/api/tasks",
-    "title": "*查询任务",
+    "title": "查询任务",
     "name": "QueryTasks",
     "group": "Task",
     "version": "1.0.0",

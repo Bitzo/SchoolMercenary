@@ -62,6 +62,11 @@ const task = sequelize.define('task', {
     allowNull: false,
     defaultValue: '0',
   },
+  isActive: {
+    type: Sequelize.INTEGER(1),
+    allowNull: false,
+    defaultValue: '1',
+  },
   createTime: {
     type: Sequelize.DATEONLY,
     allowNull: false,
