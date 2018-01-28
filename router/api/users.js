@@ -15,7 +15,6 @@ const router = new Router();
  * @api 获取用户信息
  * @param {Integer} id
  * @param {String} username
- * @param {String} nickname
  * @param {String} email
  * @param {Integer} page
  * @param {Integer} pageCount
@@ -24,14 +23,12 @@ router.get('/', async (ctx) => {
   const {
     id,
     username,
-    nickname,
     email,
   } = ctx.query;
 
   const userInfo = {
     id,
     username,
-    nickname,
     email,
   };
 
@@ -40,7 +37,7 @@ router.get('/', async (ctx) => {
   page = _.toNumber(page);
   pageCount = _.toNumber(pageCount);
 
-  if (Number.isNaN(page)) {
+  if (Number.isNaN(page) || page < 1) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
@@ -50,7 +47,7 @@ router.get('/', async (ctx) => {
     return;
   }
 
-  if (Number.isNaN(pageCount)) {
+  if (Number.isNaN(pageCount) || pageCount < 1) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
@@ -65,7 +62,6 @@ router.get('/', async (ctx) => {
   if (users) {
     const { count, rows } = users;
     users = rows.map(value => _.omit(value, ['password', 'key', 'isActive', 'role', 'createTime']));
-
     ctx.status = 200;
     ctx.body = {
       status: 200,

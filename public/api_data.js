@@ -2047,7 +2047,7 @@ define({ "api": [
             "size": "..30",
             "optional": false,
             "field": "account",
-            "description": "<p>登录帐号,可以是email/username/nickname/phoneNUmber</p>"
+            "description": "<p>登录帐号,可以是email/username/phoneNUmber</p>"
           },
           {
             "group": "Parameter",
