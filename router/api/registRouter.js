@@ -47,21 +47,22 @@ router.post('/normal', async (ctx) => {
 
   result = await userService.addUser(userInfo);
 
-  if (result) {
-    ctx.status = 200;
-    ctx.body = {
-      status: 200,
-      isSuccess: true,
-      msg: '注册成功',
-    };
-  } else {
+  if (!result) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
       isSuccess: false,
       msg: '注册失败',
     };
+    return;
   }
+
+  ctx.status = 200;
+  ctx.body = {
+    status: 200,
+    isSuccess: true,
+    msg: '注册成功',
+  };
 });
 
 /**
@@ -92,7 +93,8 @@ router.post('/phoneCode', async (ctx) => {
   }
 
   let result = await userService.queryUsers({ phoneNumber });
-  if (result !== false) {
+
+  if (result) {
     if (result.count > 0) {
       ctx.status = 400;
       ctx.body = {
@@ -102,8 +104,10 @@ router.post('/phoneCode', async (ctx) => {
       };
       return;
     }
+
     ctx.session.code = Math.floor((Math.random() * 9000) + 1000);
     ctx.session.phoneNumber = phoneNumber;
+
     const { code } = ctx.session;
     result = smsUtils.sendSMS(phoneNumber, code);
     if (result) {
@@ -115,6 +119,7 @@ router.post('/phoneCode', async (ctx) => {
       return;
     }
   }
+
   ctx.status = 400;
   ctx.body = {
     status: 400,
@@ -175,7 +180,6 @@ router.post('/phone', async (ctx) => {
     nickname,
     phoneNumber,
   };
-
   const err = dv.isParamsInvalid(userInfo);
 
   if (err) {
@@ -189,6 +193,7 @@ router.post('/phone', async (ctx) => {
   }
 
   let result = await userService.queryUsers({ username });
+
   if (!result || result.count) {
     ctx.status = 400;
     ctx.body = {
@@ -218,21 +223,22 @@ router.post('/phone', async (ctx) => {
 
   result = await userService.addUser(userInfo);
 
-  if (result) {
-    ctx.status = 200;
-    ctx.body = {
-      status: 200,
-      isSuccess: true,
-      msg: '注册成功',
-    };
-  } else {
+  if (!result) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
       isSuccess: false,
       msg: '注册失败',
     };
+    return;
   }
+
+  ctx.status = 200;
+  ctx.body = {
+    status: 200,
+    isSuccess: true,
+    msg: '注册成功',
+  };
 });
 
 module.exports = router;

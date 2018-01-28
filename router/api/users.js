@@ -25,13 +25,11 @@ router.get('/', async (ctx) => {
     username,
     email,
   } = ctx.query;
-
   const userInfo = {
     id,
     username,
     email,
   };
-
   let { page = 1, pageCount = config.pageCount } = ctx.query;
 
   page = _.toNumber(page);
@@ -74,6 +72,7 @@ router.get('/', async (ctx) => {
     };
     return;
   }
+
   ctx.status = 400;
   ctx.body = {
     status: 400,
@@ -90,14 +89,20 @@ router.get('/', async (ctx) => {
  * @param {string} desc
  */
 router.put('/:id', async (ctx, next) => {
+  const id = _.toNumber(ctx.params.id);
   const {
     nickname,
     gender,
     birthday,
     desc,
   } = ctx.request.body;
-
-  const id = _.toNumber(ctx.params.id);
+  const userInfo = {
+    id,
+    nickname,
+    gender,
+    birthday,
+    desc,
+  };
 
   if (Number.isNaN(id)) {
     next();
@@ -122,29 +127,22 @@ router.put('/:id', async (ctx, next) => {
     return;
   }
 
-  const userInfo = {
-    id,
-    nickname,
-    gender,
-    birthday,
-    desc,
-  };
-
   const result = await userService.updateUser(userInfo);
 
-  if (result !== false) {
-    ctx.body = {
-      status: 200,
-      isSuccess: true,
-      msg: '修改成功',
-    };
-  } else {
+  if (!result) {
+    ctx.status = 400;
     ctx.body = {
       status: 400,
       isSuccess: false,
       msg: '修改失败',
     };
   }
+
+  ctx.body = {
+    status: 200,
+    isSuccess: true,
+    msg: '修改成功',
+  };
 });
 
 /**
@@ -153,6 +151,9 @@ router.put('/:id', async (ctx, next) => {
  */
 router.put('/avatar/:id', async (ctx) => {
   const id = _.toNumber(ctx.params.id);
+  const dir = 'public/img/avatar';
+  const filename = `${moment().format('YYYYMMDDHHmmss')}${ctx.token.id}${Math.floor(Math.random() * 100)}`;
+  let res = await fileUtils.saveFile(ctx, 'avatar', dir, filename, 'image', 2);
 
   if (id !== ctx.token.id) {
     ctx.status = 400;
@@ -163,10 +164,7 @@ router.put('/avatar/:id', async (ctx) => {
     };
     return;
   }
-  const dir = 'public/img/avatar';
-  const filename = `${moment().format('YYYYMMDDHHmmss')}${ctx.token.id}${Math.floor(Math.random() * 100)}`;
-  let res = await fileUtils.saveFile(ctx, 'avatar', dir, filename, 'image', 2);
-  console.log(res);
+
   if (res.isSuccess) {
     let userInfo = await userService.queryUsers({ id });
     [userInfo] = userInfo.rows;
@@ -177,7 +175,9 @@ router.put('/avatar/:id', async (ctx) => {
         fs.unlinkSync(file);
       }
     }
+
     res = await userService.updateUser({ id, avatar: `/img/avatar/${res.data}` });
+
     if (res) {
       ctx.status = 200;
       ctx.body = {
@@ -187,6 +187,7 @@ router.put('/avatar/:id', async (ctx) => {
       };
       return;
     }
+
     ctx.status = 400;
     ctx.body = {
       status: 400,
@@ -195,6 +196,7 @@ router.put('/avatar/:id', async (ctx) => {
     };
     return;
   }
+
   ctx.status = 400;
   ctx.body = {
     status: 400,
@@ -210,6 +212,7 @@ router.put('/avatar/:id', async (ctx) => {
  */
 router.put('/password/:id', async (ctx, next) => {
   const id = _.toNumber(ctx.params.id);
+  const { password } = ctx.request.body;
 
   if (Number.isNaN(id)) {
     next();
@@ -226,8 +229,6 @@ router.put('/password/:id', async (ctx, next) => {
     return;
   }
 
-  const { password } = ctx.request.body;
-
   if (dv.isParamsInvalid({ password })) {
     ctx.status = 400;
     ctx.body = {
@@ -239,7 +240,6 @@ router.put('/password/:id', async (ctx, next) => {
   }
 
   const { encrypted, key } = await encrypt.encrypt(password);
-
   const result = await userService.updateUser({ password: encrypted, key, id });
 
   if (result !== false) {
@@ -250,6 +250,7 @@ router.put('/password/:id', async (ctx, next) => {
     };
     return;
   }
+
   ctx.status = 400;
   ctx.body = {
     status: 400,

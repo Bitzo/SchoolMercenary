@@ -22,6 +22,7 @@ router.get('/', async (ctx) => {
   if (pass) {
     const param = { category, parent };
     const result = await dicService.queryDic(param);
+
     if (result !== false) {
       const dic = result.rows;
       ctx.status = 200;
@@ -33,6 +34,7 @@ router.get('/', async (ctx) => {
       };
       return;
     }
+
     ctx.status = 400;
     ctx.body = {
       status: 400,

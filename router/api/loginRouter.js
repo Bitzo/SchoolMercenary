@@ -14,7 +14,6 @@ const router = new Router();
  */
 router.post('/', async (ctx) => {
   const { account, password } = ctx.request.body;
-
   const err = dv.isParamsInvalid({ account, password });
 
   if (err) {
@@ -42,6 +41,7 @@ router.post('/', async (ctx) => {
   if (result && result.count === 1) {
     [result] = result.rows;
     const decryptPwd = await crypt.decrypt(result.password, result.key);
+
     if (decryptPwd === password) {
       const token = validAuth.getJWT({
         id: result.id,
@@ -59,6 +59,7 @@ router.post('/', async (ctx) => {
       };
       return;
     }
+
     ctx.status = 400;
     ctx.body = {
       status: 400,

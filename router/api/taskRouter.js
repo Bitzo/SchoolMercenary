@@ -21,14 +21,12 @@ router.post('/', async (ctx) => {
     time,
     address,
   } = ctx.request.body;
-
   const taskInfo = {
     title,
     taskType,
     time,
     address,
   };
-
   const err = dv.isParamsInvalid(taskInfo);
 
   if (err) {

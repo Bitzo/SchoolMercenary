@@ -46,11 +46,13 @@ router.get('/', async (ctx) => {
   if (results !== false) {
     let messages = results.rows;
     const { count } = results;
+
     messages = messages.map((value) => {
       const msg = value;
       msg.from = msg.user.username;
       return _.omit(msg, ['uId', 'status', 'user']);
     });
+
     ctx.status = 200;
     ctx.body = {
       status: 200,
