@@ -27,7 +27,7 @@ const dictionary = sequelize.define('dictionary', {
     allowNull: false,
   },
   createTime: {
-    type: Sequelize.DATEONLY,
+    type: Sequelize.DATE,
     allowNull: false,
   },
   parent: {

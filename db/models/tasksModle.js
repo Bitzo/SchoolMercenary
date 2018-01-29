@@ -68,7 +68,7 @@ const task = sequelize.define('task', {
     defaultValue: '1',
   },
   createTime: {
-    type: Sequelize.DATEONLY,
+    type: Sequelize.DATE,
     allowNull: false,
     get() {
       const date = this.getDataValue('createTime');
@@ -76,7 +76,7 @@ const task = sequelize.define('task', {
     },
   },
   editTime: {
-    type: Sequelize.DATEONLY,
+    type: Sequelize.DATE,
     allowNull: false,
     get() {
       const date = this.getDataValue('editTime');

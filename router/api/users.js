@@ -129,7 +129,7 @@ router.put('/:id', async (ctx, next) => {
 
   const result = await userService.updateUser(userInfo);
 
-  if (!result) {
+  if (result === false) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
@@ -178,7 +178,7 @@ router.put('/avatar/:id', async (ctx) => {
 
     res = await userService.updateUser({ id, avatar: `/img/avatar/${res.data}` });
 
-    if (res) {
+    if (res !== false) {
       ctx.status = 200;
       ctx.body = {
         status: 200,

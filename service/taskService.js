@@ -89,7 +89,6 @@ async function updateTask(taskInfo) {
       info[key] = value;
     }
   });
-  console.log(info);
   try {
     return await taskDAL.updateTask(info);
   } catch (err) {

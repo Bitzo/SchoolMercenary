@@ -222,4 +222,108 @@ router.delete('/:id', async (ctx) => {
   };
 });
 
+/**
+ * 修改任务
+ */
+router.put('/:id', async (ctx) => {
+  let { id } = ctx.params;
+  const uId = ctx.token.id;
+  const {
+    title,
+    taskType,
+    content,
+    memberCount,
+    time,
+    address,
+  } = ctx.request.body;
+  const taskInfo = {
+    title,
+    taskType,
+    content,
+    memberCount,
+    time,
+    address,
+  };
+
+  id = _.toNumber(id);
+
+  if (dv.isParamsInvalid({ id }) || id < 1) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'id 值错误',
+    };
+    return;
+  }
+
+  taskInfo.id = id;
+
+  let result = await taskService.queryTasks({ id, isActive: 1 });
+
+  if (!result) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '系统错误',
+    };
+    return;
+  }
+
+  if (result.count < 1) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '任务不存在',
+    };
+    return;
+  }
+
+  [result] = result.rows;
+
+  if (result.uId !== uId) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '没有权限',
+    };
+    return;
+  }
+
+  if (taskInfo.taskType > 0) {
+    result = await dicService.queryDicByID(taskInfo.taskType);
+
+    if (!result || result.count < 1) {
+      ctx.status = 400;
+      ctx.body = {
+        status: 400,
+        isSuccess: false,
+        msg: '修改失败，任务类型不存在',
+      };
+      return;
+    }
+  }
+
+  result = await taskService.updateTask(taskInfo);
+
+  if (result === false) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '修改失败，系统错误',
+    };
+    return;
+  }
+
+  ctx.body = {
+    status: 200,
+    isSuccess: true,
+    msg: '修改成功',
+  };
+});
+
 module.exports = router;
