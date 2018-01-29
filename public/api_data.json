@@ -1411,7 +1411,7 @@
   {
     "type": "PUT",
     "url": "/api/tasks/:id",
-    "title": "*修改任务",
+    "title": "修改任务",
     "name": "UpdateTask",
     "group": "Task",
     "version": "1.0.0",

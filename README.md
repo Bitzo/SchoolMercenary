@@ -36,3 +36,5 @@
 |:-:|:--:|:--|:---|
 |1   | POST  | /api/tasks  | 新增任务  |
 |2   | GET  | /api/tasks  | 查询任务  |
+|3   | PUT  | /api/tasks/:id  | 修改任务  |
+|4   | DELETE  | /api/tasks/:id  | 删除任务  |
