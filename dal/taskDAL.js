@@ -48,6 +48,8 @@ async function addTask(taskInfo) {
  * @param {string} taskInfo.address
  * @param {date} taskInfo.time
  * @param {string} taskInfo.address
+ * @param {number=} page 页码
+ * @param {number=} pageCount 每页显示的数量
  */
 async function queryTasks(andParam = {}, orParam = [], page = 1, pageCount = config.pageCount) {
   try {

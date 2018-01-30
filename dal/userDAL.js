@@ -40,6 +40,8 @@ async function addUser(userInfo) {
  * @param {string=} userInfo.descrption 个性签名
  * @param {string=1} userInfo.isActive 是否有效
  * @param {string=} userInfo.avatar 头像
+ * @param {number=} page 页码
+ * @param {number=} pageCount 每页显示的数量
  *
  * @return {boolean|array} 查询成功返回对象数组，查询失败则返回false
  */
