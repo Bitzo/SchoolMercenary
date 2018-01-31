@@ -35,7 +35,7 @@ const task = sequelize.define('task', {
     type: Sequelize.STRING(200),
     allowNull: true,
   },
-  menberCount: {
+  memberCount: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
     defaultValue: '1',

@@ -4,10 +4,15 @@ const users = require('./userModel');
 const tasks = require('./tasksModle');
 
 const taskUsers = sequelize.define('taskUser', {
-  tId: {
+  id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
     primaryKey: true,
+    autoIncrement: true,
+  },
+  tId: {
+    type: Sequelize.INTEGER(11),
+    allowNull: false,
     references: {
       model: 'tasks',
       key: 'id',
@@ -16,7 +21,6 @@ const taskUsers = sequelize.define('taskUser', {
   uId: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
-    primaryKey: true,
     references: {
       model: 'users',
       key: 'id',
@@ -37,6 +41,8 @@ const taskUsers = sequelize.define('taskUser', {
   },
 }, {
   tableName: 'taskUsers',
+  createdAt: 'createTime',
+  updatedAt: false,
 });
 
 taskUsers.belongsTo(users, {
