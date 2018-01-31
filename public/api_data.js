@@ -1510,7 +1510,7 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/api/taskuser",
-    "title": "*申请任务",
+    "title": "申请任务",
     "name": "ApplyTaskUsers",
     "group": "TaskUser",
     "version": "1.0.0",
@@ -1570,7 +1570,7 @@ define({ "api": [
   {
     "type": "PUT",
     "url": "/api/taskuser/cancel/:tId",
-    "title": "*取消任务申请",
+    "title": "取消任务申请",
     "name": "CancelTaskUsers",
     "group": "TaskUser",
     "version": "1.0.0",
