@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../db');
+const moment = require('moment');
 
 const user = sequelize.define('user', {
   id: {
@@ -62,6 +63,10 @@ const user = sequelize.define('user', {
   birthday: {
     type: Sequelize.DATEONLY,
     allowNull: true,
+    get() {
+      const date = this.getDataValue('birthday');
+      return moment(date).format('YYYY-MM-DD');
+    },
   },
   desc: {
     type: Sequelize.STRING(100),
@@ -84,6 +89,10 @@ const user = sequelize.define('user', {
   },
   createTime: {
     type: Sequelize.DATE,
+    get() {
+      const date = this.getDataValue('createTime');
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   isActive: {
     type: Sequelize.BOOLEAN,

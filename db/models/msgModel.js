@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../db');
 const user = require('./userModel');
+const moment = require('moment');
 
 const message = sequelize.define('message', {
   id: {
@@ -33,6 +34,10 @@ const message = sequelize.define('message', {
   createTime: {
     type: Sequelize.DATE,
     allowNull: false,
+    get() {
+      const date = this.getDataValue('createTime');
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
 }, {
   createdAt: 'createTime',

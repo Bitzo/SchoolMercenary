@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../db');
+const moment = require('moment');
 
 const dictionary = sequelize.define('dictionary', {
   id: {
@@ -29,6 +30,10 @@ const dictionary = sequelize.define('dictionary', {
   createTime: {
     type: Sequelize.DATE,
     allowNull: false,
+    get() {
+      const date = this.getDataValue('createTime');
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   parent: {
     type: Sequelize.INTEGER(11),
