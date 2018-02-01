@@ -161,6 +161,8 @@ router.put('/:tId/:uId', async (ctx) => {
   let { status } = ctx.request.body;
   const userId = ctx.token.id;
 
+  status = _.toNumber(status);
+
   if (status) status = true;
   else status = false;
 
@@ -211,15 +213,13 @@ router.put('/:tId/:uId', async (ctx) => {
   [result] = result.rows;
 
   if (result.status !== taskUserStatusConfig.PENDING) {
-    if (!result || result.count < 1) {
-      ctx.status = 400;
-      ctx.body = {
-        status: 400,
-        isSuccess: false,
-        msg: '当前状态不需审核',
-      };
-      return;
-    }
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '当前状态不需审核',
+    };
+    return;
   }
 
   const { id } = result;
@@ -241,26 +241,24 @@ router.put('/:tId/:uId', async (ctx) => {
     const taskStatus = willBeFulfilled ? taskStatusConfig.FULFILLED : taskStatusConfig.PENDING;
 
     result = await taskService.updateTask({ id: tId, count: count + 1, status: taskStatus });
-
-    if (!result) {
-      ctx.status = 400;
-      ctx.body = {
-        status: 400,
-        isSuccess: false,
-        msg: '系统错误',
-      };
-      return;
-    }
-
-    ctx.body = {
-      status: 200,
-      isSuccess: true,
-      msg: '操作成功',
-    };
   } else {
     // 拒绝申请
-    // TODO: reject
+    result = await taskUserService.updateTaskUser({ id, status: taskUserStatusConfig.REJECTED, acceptedTime: moment().format('YYYY-MM-DD HH:mm:ss') });
   }
+  if (!result) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '系统错误',
+    };
+    return;
+  }
+  ctx.body = {
+    status: 200,
+    isSuccess: true,
+    msg: '操作成功',
+  };
 });
 
 module.exports = router;
