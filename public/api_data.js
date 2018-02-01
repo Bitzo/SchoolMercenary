@@ -1616,7 +1616,7 @@ define({ "api": [
   {
     "type": "PUT",
     "url": "/api/taskuser/:tId/:uId",
-    "title": "*接受/拒绝任务申请",
+    "title": "接受/拒绝任务申请",
     "name": "CheckTaskUsers",
     "group": "TaskUser",
     "version": "1.0.0",
@@ -1632,10 +1632,11 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "Boolean",
+            "type": "Number",
+            "size": "0,1",
             "optional": false,
             "field": "status",
-            "description": "<p>结果，同意或不同意</p>"
+            "description": "<p>结果，1:同意 0:不同意</p>"
           }
         ]
       }

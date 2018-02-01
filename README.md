@@ -45,3 +45,4 @@
 |:-:|:--:|:--|:---|
 | 1 | POST | /api/taskuser | 申请任务 |
 | 2 | PUT | /api/taskuser/cancel/:tId | 取消任务申请 |
+| 3 | PUT | /api/taskuser/:tId/:uId | 审核申请 |
