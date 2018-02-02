@@ -1,5 +1,4 @@
 const TaskUser = require('../db/models/taskUserModel');
-const _ = require('lodash');
 const Sequelize = require('sequelize');
 const config = require('../config/config');
 
@@ -60,14 +59,12 @@ async function queryTaskUser(andParam = {}, orParam = [], page = 1, pageCount = 
 /**
  * 更新任务用户数据
  */
-async function updateTaskUser(info) {
+async function updateTaskUser(info, index) {
   try {
     let result = await TaskUser.update(
-      _.omit(info, 'id'),
+      info,
       {
-        where: {
-          id: info.id,
-        },
+        where: index,
       },
     );
     [result] = result;

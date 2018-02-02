@@ -6,6 +6,9 @@ const _ = require('lodash');
 const userService = require('../../service/userService');
 const dicService = require('../../service/dicService');
 const config = require('../../config/config');
+const taskUserService = require('../../service/taskUserService');
+const taskStatusConfig = require('../../config/statusConfig').taskStatus;
+const taskUserStatusConfig = require('../../config/statusConfig').taskUserStatus;
 
 const router = new Router();
 
@@ -49,7 +52,7 @@ router.post('/', async (ctx) => {
     return;
   }
 
-  const now = moment().format();
+  const now = moment().format('YYYY-MM-DD HH:mm:ss');
 
   if (moment(time).isBefore(now)) {
     ctx.status = 400;
@@ -202,7 +205,21 @@ router.delete('/:id', async (ctx) => {
     return;
   }
 
-  result = await taskService.updateTask({ id, isActive: 0 });
+  result = await taskService.updateTask({ id, status: taskStatusConfig.CANCELED, isActive: 0 });
+
+  if (!result) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '系统错误！',
+    };
+    return;
+  }
+
+  result = await taskUserService.updateTaskUser({
+    status: taskUserStatusConfig.BECANCELED,
+  }, { tId: id });
 
   if (!result) {
     ctx.status = 400;
@@ -289,6 +306,16 @@ router.put('/:id', async (ctx) => {
       status: 400,
       isSuccess: false,
       msg: '没有权限',
+    };
+    return;
+  }
+
+  if (result.status !== taskStatusConfig.PENDING) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '当前状态下不能更改',
     };
     return;
   }

@@ -134,7 +134,9 @@ router.put('/cancel/:tId', async (ctx) => {
   }
 
   const { id } = result;
-  result = taskUserService.updateTaskUser({ id, status: taskUserStatusConfig.CANCELED });
+  result = taskUserService.updateTaskUser({
+    status: taskUserStatusConfig.CANCELED,
+  }, { id });
 
   if (!result) {
     ctx.status = 400;
@@ -226,7 +228,10 @@ router.put('/:tId/:uId', async (ctx) => {
 
   if (status) {
     // 同意申请
-    result = await taskUserService.updateTaskUser({ id, status: taskUserStatusConfig.ACCEPTED, acceptedTime: moment().format('YYYY-MM-DD HH:mm:ss') });
+    result = await taskUserService.updateTaskUser({
+      status: taskUserStatusConfig.ACCEPTED,
+      acceptedTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }, { id });
 
     if (!result) {
       ctx.status = 400;
@@ -243,7 +248,10 @@ router.put('/:tId/:uId', async (ctx) => {
     result = await taskService.updateTask({ id: tId, count: count + 1, status: taskStatus });
   } else {
     // 拒绝申请
-    result = await taskUserService.updateTaskUser({ id, status: taskUserStatusConfig.REJECTED, acceptedTime: moment().format('YYYY-MM-DD HH:mm:ss') });
+    result = await taskUserService.updateTaskUser({
+      status: taskUserStatusConfig.REJECTED,
+      acceptedTime: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }, { id });
   }
   if (!result) {
     ctx.status = 400;

@@ -2255,14 +2255,6 @@ define({ "api": [
             "type": "String",
             "size": "5...30",
             "optional": false,
-            "field": "username",
-            "description": "<p>用户名</p>"
-          },
-          {
-            "group": "Parameter",
-            "type": "String",
-            "size": "5...30",
-            "optional": false,
             "field": "nickname",
             "description": "<p>昵称</p>"
           },
