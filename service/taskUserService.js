@@ -46,7 +46,7 @@ async function addTaskUser(taskInfo) {
 /**
  * service_updateTaskUser
  */
-async function updateTaskUser(taskInfo) {
+async function updateTaskUser(taskInfo, index) {
   const info = {};
   _.forIn(taskInfo, (value, key) => {
     if (dv.isParamsValid({ value })) {
@@ -54,7 +54,7 @@ async function updateTaskUser(taskInfo) {
     }
   });
   try {
-    return await taskUserDAL.updateTaskUser(info);
+    return await taskUserDAL.updateTaskUser(info, index);
   } catch (err) {
     console.log(`Update TaskUser Failed: ${err}`);
     return false;
