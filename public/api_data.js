@@ -1353,7 +1353,7 @@ define({ "api": [
             "size": "1..50",
             "optional": true,
             "field": "title",
-            "description": "<p>任务名称</p>"
+            "description": "<p>任务名称(完全匹配)</p>"
           },
           {
             "group": "Parameter",
@@ -1670,7 +1670,7 @@ define({ "api": [
   {
     "type": "GET",
     "url": "/api/taskuser",
-    "title": "*获取任务人员/人员任务信息/参与的任务历史记录",
+    "title": "*查询任务人员/ 查询用户申请参与的任务",
     "name": "QueryTaskUsers",
     "group": "TaskUser",
     "version": "1.0.0",
@@ -1689,19 +1689,19 @@ define({ "api": [
             "type": "Number",
             "optional": true,
             "field": "tId",
-            "description": "<p>任务ID</p>"
+            "description": "<p>任务ID 【任务ID、用户ID只接收其一】</p>"
           },
           {
             "group": "Parameter",
             "type": "Number",
             "optional": true,
             "field": "uId",
-            "description": "<p>用户ID</p>"
+            "description": "<p>用户ID 【任务ID、用户ID只接收其一】</p>"
           },
           {
             "group": "Parameter",
             "type": "Number",
-            "size": "0,1,2",
+            "size": "0,1,2,3,4",
             "optional": true,
             "field": "status",
             "description": "<p>状态</p>"
