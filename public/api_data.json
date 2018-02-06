@@ -1670,7 +1670,7 @@
   {
     "type": "GET",
     "url": "/api/taskuser",
-    "title": "*查询任务人员/ 查询用户申请参与的任务",
+    "title": "查询任务人员/ 查询用户申请参与的任务",
     "name": "QueryTaskUsers",
     "group": "TaskUser",
     "version": "1.0.0",
@@ -1689,14 +1689,14 @@
             "type": "Number",
             "optional": true,
             "field": "tId",
-            "description": "<p>任务ID 【任务ID、用户ID只接收其一】</p>"
+            "description": "<p>任务ID 任务ID、用户ID同时有效提交，任务Id优先</p>"
           },
           {
             "group": "Parameter",
             "type": "Number",
             "optional": true,
             "field": "uId",
-            "description": "<p>用户ID 【任务ID、用户ID只接收其一】</p>"
+            "description": "<p>用户ID 任务ID、用户ID同时有效提交，任务Id优先</p>"
           },
           {
             "group": "Parameter",

@@ -46,3 +46,4 @@
 | 1 | POST | /api/taskuser | 申请任务 |
 | 2 | PUT | /api/taskuser/cancel/:tId | 取消任务申请 |
 | 3 | PUT | /api/taskuser/:tId/:uId | 审核申请 |
+| 4 | GET | /api/taskuser | 查询任务用户，用户任务历史 |
