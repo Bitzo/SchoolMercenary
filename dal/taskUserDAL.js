@@ -1,6 +1,8 @@
 const TaskUser = require('../db/models/taskUserModel');
 const Sequelize = require('sequelize');
 const config = require('../config/config');
+const User = require('../db/models/userModel');
+const Task = require('../db/models/tasksModle');
 
 const { Op } = Sequelize;
 
@@ -34,6 +36,18 @@ async function queryTaskUser(andParam = {}, orParam = [], page = 1, pageCount = 
         where: {
           [Op.and]: andParam,
         },
+        include: [
+          {
+            model: User,
+            attributes: ['nickname', 'avatar', 'gender', 'love', 'hate'],
+            required: true,
+          },
+          {
+            model: Task,
+            attributes: ['title', 'content', 'time', 'address'],
+            require: true,
+          },
+        ],
         offset: (page - 1) * pageCount,
         limit: pageCount,
       });

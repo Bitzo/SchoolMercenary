@@ -1,6 +1,5 @@
 const Router = require('koa-router');
 const taskService = require('../../service/taskService');
-const dv = require('../../utils/dataValidator');
 const moment = require('moment');
 const _ = require('lodash');
 const userService = require('../../service/userService');
@@ -266,6 +265,93 @@ router.put('/:tId/:uId', async (ctx) => {
     status: 200,
     isSuccess: true,
     msg: '操作成功',
+  };
+});
+
+/**
+ * 查询任务
+ */
+router.get('/', async (ctx) => {
+  let {
+    uId,
+    tId,
+    status,
+    page = 1,
+    pageCount = config.pageCount,
+  } = ctx.query;
+
+  uId = _.toNumber(uId);
+  tId = _.toNumber(tId);
+  status = _.toNumber(status);
+  page = _.toNumber(page);
+  pageCount = _.toNumber(pageCount);
+
+  if (Number.isNaN(status)) status = '';
+
+  if (Number.isNaN(page) || page < 1) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'page 参数有误',
+    };
+    return;
+  }
+
+  if (Number.isNaN(pageCount) || pageCount < 1) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'pageCount 参数有误',
+    };
+    return;
+  }
+
+  let result = {};
+
+  if (tId) {
+    result = await taskUserService.queryTaskUser(
+      { tId, status, isActive: 1 },
+      [],
+      page,
+      pageCount,
+    );
+    if (result) {
+      result.rows = result.rows.map(value => _.omit(value, 'task'));
+    }
+  } else if (uId) {
+    result = await taskUserService.queryTaskUser({ uId, status, isActive: 1 }, [], page, pageCount);
+    if (result) {
+      result.rows = result.rows.map(value => _.omit(value, 'user'));
+    }
+  } else {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'uId, tId 参数不合规范',
+    };
+    return;
+  }
+
+  if (!result) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '系统错误',
+    };
+  }
+
+  ctx.body = {
+    status: 200,
+    isSuccess: true,
+    msg: '查询成功',
+    page,
+    pageCount,
+    totalPage: Math.ceil(result.count / pageCount),
+    data: result.rows,
   };
 });
 

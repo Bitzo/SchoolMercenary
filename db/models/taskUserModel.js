@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 const sequelize = require('../db');
 const users = require('./userModel');
 const tasks = require('./tasksModle');
+const moment = require('moment');
 
 const taskUsers = sequelize.define('taskUser', {
   id: {
@@ -29,10 +30,18 @@ const taskUsers = sequelize.define('taskUser', {
   createTime: {
     type: Sequelize.DATE,
     allowNull: false,
+    get() {
+      const date = this.getDataValue('createTime');
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   acceptedTime: {
     type: Sequelize.DATE,
     allowNull: true,
+    get() {
+      const date = this.getDataValue('acceptedTime');
+      return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    },
   },
   status: {
     type: Sequelize.INTEGER(1),
