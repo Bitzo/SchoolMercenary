@@ -33,6 +33,16 @@ router.post('/', async (ctx) => {
     return;
   }
 
+  if (level < 1 || level > 5) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '评价等级错误',
+    };
+    return;
+  }
+
   let result = await taskUserService.queryTaskUser({ tId, uId, isActive: 1 });
 
   if (!result || result.count < 1) {

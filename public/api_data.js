@@ -901,7 +901,7 @@ define({ "api": [
   {
     "type": "POST",
     "url": "/api/evaluate",
-    "title": "*评价曾参与过的任务",
+    "title": "评价曾参与过的任务",
     "name": "EvaluateTask",
     "group": "Evaluate",
     "version": "1.0.0",

@@ -47,3 +47,9 @@
 | 2 | PUT | /api/taskuser/cancel/:tId | 取消任务申请 |
 | 3 | PUT | /api/taskuser/:tId/:uId | 审核申请 |
 | 4 | GET | /api/taskuser | 查询任务用户，用户任务历史 |
+
+### 评价任务API
+
+| 序号 | 方法 | 接口 | 备注 |
+|:-:|:--:|:--|:---|
+| 1 | POST | /api/evaluate | 评价参与过的任务 |

@@ -19,7 +19,7 @@ async function queryEvaluate(andParam = {}, orParam = [], page = 1, pageCount = 
     or = orParam;
   }
   try {
-    return await evaluateDAL.queryEvaluate(and, or, page, pageCount);
+    return await evaluateDAL.queryEvaluates(and, or, page, pageCount);
   } catch (err) {
     console.log(`Query Evaluate Failed: ${err}`);
     return false;
