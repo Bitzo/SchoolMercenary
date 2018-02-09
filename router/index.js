@@ -7,6 +7,7 @@ const registRouter = require('./api/registRouter');
 const loginRouter = require('./api/loginRouter');
 const taskRouter = require('./api/taskRouter');
 const taskUserRouter = require('./api/taskUserRouter');
+const evaluateRouter = require('./api/evaluateRouter');
 
 const router = new Router();
 
@@ -42,5 +43,6 @@ router.use('/api/register', registRouter.routes());
 router.use('/api/login', loginRouter.routes());
 router.use('/api/tasks', taskRouter.routes());
 router.use('/api/taskuser', taskUserRouter.routes());
+router.use('/api/evaluate', evaluateRouter.routes());
 
 module.exports = router;
