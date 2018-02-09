@@ -5,7 +5,7 @@ const moment = require('moment');
 const User = require('./userModel');
 const Task = require('./tasksModle');
 
-const evulate = sequelize.define('evulate', {
+const evaluate = sequelize.define('evaluate', {
   id: {
     type: Sequelize.INTEGER(11),
     allowNull: false,
@@ -49,7 +49,7 @@ const evulate = sequelize.define('evulate', {
     allowNull: true,
   },
   createTime: {
-    type: Sequelize.DATEONLY,
+    type: Sequelize.DATE,
     allowNull: false,
     get() {
       const date = this.getDataValue('createTime');
@@ -59,22 +59,22 @@ const evulate = sequelize.define('evulate', {
 }, {
   createdAt: 'createTime',
   updatedAt: false,
-  tableName: 'evulate',
+  tableName: 'evaluate',
 });
 
-evulate.belongsTo(taskUser, {
+evaluate.belongsTo(taskUser, {
   foreignKey: 'taskUserId',
   targetKet: 'id',
 });
 
-evulate.belongsTo(Task, {
+evaluate.belongsTo(Task, {
   foreignKey: 'taskId',
   targetKet: 'id',
 });
 
-evulate.belongsTo(User, {
+evaluate.belongsTo(User, {
   foreignKey: 'UserId',
   targetKet: 'id',
 });
 
-module.exports = evulate;
+module.exports = evaluate;
