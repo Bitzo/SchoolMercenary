@@ -1,5 +1,7 @@
 const Router = require('koa-router');
 const dv = require('../../utils/dataValidator');
+const config = require('../../config/config');
+const _ = require('lodash');
 const taskUserService = require('../../service/taskUserService');
 const taskUserStatusConfig = require('../../config/statusConfig').taskUserStatus;
 const taskStatusConfig = require('../../config/statusConfig').taskStatus;
@@ -124,5 +126,76 @@ router.post('/', async (ctx) => {
   };
 });
 
+/**
+ * 查询评价信息
+ */
+router.get('/', async (ctx) => {
+  const { tId, level } = ctx.query;
+  let {
+    page = 1,
+    pageCount = config.pageCount,
+  } = ctx.query;
+
+  page = _.toNumber(page);
+  pageCount = _.toNumber(pageCount);
+
+  if (Number.isNaN(page) || page < 1) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'page 参数有误',
+    };
+    return;
+  }
+
+  if (Number.isNaN(pageCount) || pageCount < 1) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'pageCount 参数有误',
+    };
+    return;
+  }
+
+  const err = await dv.isParamsInvalid({ tId });
+
+  if (err) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'tId 参数有误',
+    };
+    return;
+  }
+
+  const result = await evaluateService.queryEvaluate({ taskId: tId, level }, [], page, pageCount);
+
+  if (!result) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '系统错误',
+    };
+    return;
+  }
+
+  const { count } = result;
+
+  const rows = result.rows.map(v => _.omit(v, 'user'));
+
+  ctx.body = {
+    status: 200,
+    isSuccess: true,
+    msg: '查询成功',
+    page,
+    pageCount,
+    totalPage: Math.ceil(count / pageCount),
+    data: rows,
+  };
+});
 
 module.exports = router;
