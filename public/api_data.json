@@ -1034,7 +1034,7 @@
   {
     "type": "GET",
     "url": "/api/evaluate",
-    "title": "*查询评价信息",
+    "title": "查询评价信息",
     "name": "QueryEvaluate",
     "group": "Evaluate",
     "version": "1.0.0",
@@ -1086,7 +1086,7 @@
       "examples": [
         {
           "title": "HTTP/1.1 200 OK",
-          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": \"msg\",\n  \"page\": 1， //当前页码\n  \"pageCount\": 20, //当前每页数据量\n  \"totalPage\": 10, //总页数\n  \"data\": [\n     {\n       \"id\":  11101,\n       \"tId\": 10212\n       \"uid\": 12153,\n       \"level\": 4,\n       \"content\": \"good\",\n       \"createTime0\": \"2017-12-21 12:00\"\n     },\n     ...\n  ]\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": \"msg\",\n  \"page\": 1， //当前页码\n  \"pageCount\": 20, //当前每页数据量\n  \"totalPage\": 10, //总页数\n  \"data\": [\n     {\n       \"id\":  11101,\n       \"taskUserId\": 132,\n       \"taskId\": 10212\n       \"level\": 4,\n       \"content\": \"good\",\n       \"createTime\": \"2017-12-21 12:00\"\n     },\n     ...\n  ]\n}",
           "type": "json"
         }
       ]
@@ -1181,8 +1181,61 @@
   {
     "type": "DELETE",
     "url": "/api/tasks/:id",
-    "title": "删除任务",
+    "title": "*删除任务",
     "name": "DeleteTask",
+    "group": "Task",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>任务ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "HTTP/1.1 200 OK",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": \"msg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Bad Request:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": 400,\n  \"isSuccess\": false,\n  \"msg\": \"errorMsg\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Forbidden:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"status\": 403,\n  \"isSuccess\": false,\n  \"msg\": \"tokenError\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "api/TaskApi.js",
+    "groupTitle": "Task"
+  },
+  {
+    "type": "PUT",
+    "url": "/api/tasks/finish/:id",
+    "title": "*完成任务",
+    "name": "FinishTask",
     "group": "Task",
     "version": "1.0.0",
     "parameter": {

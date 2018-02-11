@@ -185,7 +185,7 @@ router.get('/', async (ctx) => {
 
   const { count } = result;
 
-  const rows = result.rows.map(v => _.omit(v, 'user'));
+  const rows = result.rows.map(v => _.omit(v, ['user', 'task', 'userId']));
 
   ctx.body = {
     status: 200,

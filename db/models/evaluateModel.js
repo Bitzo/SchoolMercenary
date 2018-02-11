@@ -73,7 +73,7 @@ evaluate.belongsTo(Task, {
 });
 
 evaluate.belongsTo(User, {
-  foreignKey: 'UserId',
+  foreignKey: 'userId',
   targetKet: 'id',
 });
 

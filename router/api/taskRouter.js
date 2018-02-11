@@ -166,6 +166,10 @@ router.get('/', async (ctx) => {
   };
 });
 
+/**
+ * 删除任务
+ */
+/**
 router.delete('/:id', async (ctx) => {
   let { id } = ctx.params;
 
@@ -238,6 +242,7 @@ router.delete('/:id', async (ctx) => {
     msg: '删除成功！',
   };
 });
+**/
 
 /**
  * 修改任务

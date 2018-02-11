@@ -37,7 +37,6 @@
 | 1 | POST | /api/tasks | 新增任务 |
 | 2 | GET | /api/tasks | 查询任务 |
 | 3 | PUT | /api/tasks/:id | 修改任务 |
-| 4 | DELETE | /api/tasks/:id | 删除任务 |
 
 ### 任务用户API
 
@@ -53,3 +52,5 @@
 | 序号 | 方法 | 接口 | 备注 |
 |:-:|:--:|:--|:---|
 | 1 | POST | /api/evaluate | 评价参与过的任务 |
+| 2 | GET | /api/evaluate  | 查询评价信息 |
+| ~~3~~ | ~~PUT~~ | ~~/api/evaluate/:userId~~ | ~~评价用户~~ |
