@@ -169,7 +169,6 @@ router.get('/', async (ctx) => {
 /**
  * 删除任务
  */
-/**
 router.delete('/:id', async (ctx) => {
   let { id } = ctx.params;
 
@@ -209,21 +208,30 @@ router.delete('/:id', async (ctx) => {
     return;
   }
 
-  result = await taskService.updateTask({ id, status: taskStatusConfig.CANCELED, isActive: 0 });
+  [result] = result.rows;
 
-  if (!result) {
+  if (!_.toNumber(result.isActive)) {
     ctx.status = 400;
     ctx.body = {
       status: 400,
       isSuccess: false,
-      msg: '系统错误！',
+      msg: '删除成功!',
     };
     return;
   }
 
-  result = await taskUserService.updateTaskUser({
-    status: taskUserStatusConfig.BECANCELED,
-  }, { tId: id });
+  // 如果任务状态是非可删除状态则拒绝请求
+  if (result.status === taskStatusConfig.PENDING || result.status === taskStatusConfig.FULFILLED) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '当前状态下不可删除',
+    };
+    return;
+  }
+
+  result = await taskService.updateTask({ id, isActive: 0 });
 
   if (!result) {
     ctx.status = 400;
@@ -242,7 +250,6 @@ router.delete('/:id', async (ctx) => {
     msg: '删除成功！',
   };
 });
-**/
 
 /**
  * 修改任务
