@@ -1233,6 +1233,59 @@ define({ "api": [
   },
   {
     "type": "PUT",
+    "url": "/api/tasks/cancel/:id",
+    "title": "*取消任务",
+    "name": "FinishTask",
+    "group": "Task",
+    "version": "1.0.0",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "token",
+            "description": "<p>token</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "id",
+            "description": "<p>任务ID</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "HTTP/1.1 200 OK",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": 200,\n  \"isSuccess\": true,\n  \"msg\": \"msg\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "examples": [
+        {
+          "title": "Bad Request:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": 400,\n  \"isSuccess\": false,\n  \"msg\": \"errorMsg\"\n}",
+          "type": "json"
+        },
+        {
+          "title": "Forbidden:",
+          "content": "HTTP/1.1 403 Forbidden\n{\n  \"status\": 403,\n  \"isSuccess\": false,\n  \"msg\": \"tokenError\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "filename": "api/TaskApi.js",
+    "groupTitle": "Task"
+  },
+  {
+    "type": "PUT",
     "url": "/api/tasks/finish/:id",
     "title": "*完成任务",
     "name": "FinishTask",
