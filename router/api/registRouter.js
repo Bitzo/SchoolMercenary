@@ -4,6 +4,7 @@ const dv = require('../../utils/dataValidator');
 const userService = require('../../service/userService');
 const crypt = require('../../utils/encrypt');
 const smsUtils = require('../../utils/smsUtils');
+const ctxHandler = require('../../utils/ctxHandler');
 
 const router = new Router();
 
@@ -19,24 +20,14 @@ router.post('/normal', async (ctx) => {
   const err = dv.isParamsInvalid(userInfo);
 
   if (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: `{ ${err} } 参数填写不正确`,
-    };
+    ctxHandler.handle400(ctx, `{ ${err} } 参数填写不正确`);
     return;
   }
 
   let result = await userService.queryUsers({ username });
 
   if (!result || result.count) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '注册失败, 用户名重复。',
-    };
+    ctxHandler.handle400(ctx, '注册失败, 用户名重复。');
     return;
   }
 
@@ -48,12 +39,7 @@ router.post('/normal', async (ctx) => {
   result = await userService.addUser(userInfo);
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '注册失败',
-    };
+    ctxHandler.handle400(ctx, '注册失败');
     return;
   }
 
@@ -73,22 +59,12 @@ router.post('/phoneCode', async (ctx) => {
   const { phoneNumber } = ctx.request.body;
 
   if (dv.isParamsInvalid({ phoneNumber })) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '{phoneNumber} 无效',
-    };
+    ctxHandler.handle400(ctx, '{phoneNumber} 无效');
     return;
   }
 
   if (!dv.isPoneAvailable(phoneNumber)) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '手机号无效',
-    };
+    ctxHandler.handle400(ctx, '手机号无效');
     return;
   }
 
@@ -96,12 +72,7 @@ router.post('/phoneCode', async (ctx) => {
 
   if (result) {
     if (result.count > 0) {
-      ctx.status = 400;
-      ctx.body = {
-        status: 400,
-        isSuccess: false,
-        msg: '手机号已注册',
-      };
+      ctxHandler.handle400(ctx, '手机号已注册');
       return;
     }
 
@@ -120,12 +91,7 @@ router.post('/phoneCode', async (ctx) => {
     }
   }
 
-  ctx.status = 400;
-  ctx.body = {
-    status: 400,
-    isSuccess: false,
-    msg: '系统错误, 发送失败',
-  };
+  ctxHandler.handle400(ctx, '系统错误, 发送失败');
 });
 
 /**
@@ -144,32 +110,17 @@ router.post('/phone', async (ctx) => {
   } = ctx.request.body;
 
   if (!ctx.session.phoneNumber || ctx.session.phoneNumber !== phoneNumber) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '手机号码异常',
-    };
+    ctxHandler.handle400(ctx, '手机号码异常');
     return;
   }
 
   if (!ctx.session.code) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '验证码过期',
-    };
+    ctxHandler.handle400(ctx, '验证码过期');
     return;
   }
 
   if (_.toNumber(code) !== ctx.session.code) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '验证码错误',
-    };
+    ctxHandler.handle400(ctx, '验证码错误');
     return;
   }
 
@@ -183,36 +134,21 @@ router.post('/phone', async (ctx) => {
   const err = dv.isParamsInvalid(userInfo);
 
   if (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: `{ ${err} } 参数填写不正确`,
-    };
+    ctxHandler.handle400(ctx, `{ ${err} } 参数填写不正确`);
     return;
   }
 
   let result = await userService.queryUsers({ username });
 
   if (!result || result.count) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '注册失败, 用户名重复。',
-    };
+    ctxHandler.handle400(ctx, '注册失败, 用户名重复。');
     return;
   }
 
   result = await userService.queryUsers({ phoneNumber });
 
   if (!result || result.count) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '注册失败, 手机号已注册。',
-    };
+    ctxHandler.handle400(ctx, '注册失败, 手机号已注册。');
     return;
   }
 
@@ -224,12 +160,7 @@ router.post('/phone', async (ctx) => {
   result = await userService.addUser(userInfo);
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '注册失败',
-    };
+    ctxHandler.handle400(ctx, '注册失败');
     return;
   }
 

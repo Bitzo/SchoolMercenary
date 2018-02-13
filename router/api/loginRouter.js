@@ -4,6 +4,7 @@ const dv = require('../../utils/dataValidator');
 const userService = require('../../service/userService');
 const crypt = require('../../utils/encrypt');
 const validAuth = require('../../utils/validAuth');
+const ctxHandler = require('../../utils/ctxHandler');
 
 const router = new Router();
 
@@ -17,12 +18,7 @@ router.post('/', async (ctx) => {
   const err = dv.isParamsInvalid({ account, password });
 
   if (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: `{ ${err} } 参数填写错误`,
-    };
+    ctxHandler.handle400(ctx, `{ ${err} } 参数填写错误`);
     return;
   }
 
@@ -60,21 +56,11 @@ router.post('/', async (ctx) => {
       return;
     }
 
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '登录失败',
-    };
+    ctxHandler.handle400(ctx, '登录失败');
     return;
   }
 
-  ctx.status = 400;
-  ctx.body = {
-    status: 400,
-    isSuccess: false,
-    msg: '登录失败',
-  };
+  ctxHandler.handle400(ctx, '登录失败');
 });
 
 module.exports = router;

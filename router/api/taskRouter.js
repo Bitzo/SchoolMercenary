@@ -9,6 +9,7 @@ const config = require('../../config/config');
 const taskUserService = require('../../service/taskUserService');
 const taskStatusConfig = require('../../config/statusConfig').taskStatus;
 const taskUserStatusConfig = require('../../config/statusConfig').taskUserStatus;
+const ctxHandler = require('../../utils/ctxHandler');
 
 const router = new Router();
 
@@ -33,34 +34,19 @@ router.post('/', async (ctx) => {
   const err = dv.isParamsInvalid(taskInfo);
 
   if (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: `{${err}} 参数填写不正确`,
-    };
+    ctxHandler.handle400(ctx, '参数填写不正确');
     return;
   }
 
   if (!moment(time).isValid()) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '{time} 参数填写不正确, 不是一个正确的时间值',
-    };
+    ctxHandler.handle400(ctx, '不是一个正确的时间值');
     return;
   }
 
   const now = moment().format('YYYY-MM-DD HH:mm:ss');
 
   if (moment(time).isBefore(now)) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '{time} 不能早于当前时间',
-    };
+    ctxHandler.handle400(ctx, '不能早于当前时间');
     return;
   }
 
@@ -73,12 +59,7 @@ router.post('/', async (ctx) => {
   const result = await taskService.addTask(taskInfo);
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
@@ -86,12 +67,7 @@ router.post('/', async (ctx) => {
   const dicValue = await dicService.queryDicByID(result.taskType);
 
   if (!username || !dicValue) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
@@ -123,34 +99,19 @@ router.get('/', async (ctx) => {
   pageCount = _.toNumber(pageCount);
 
   if (Number.isNaN(page) || page < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'page 参数有误',
-    };
+    ctxHandler.handle400(ctx, '参数有误');
     return;
   }
 
   if (Number.isNaN(pageCount) || pageCount < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'pageCount 参数有误',
-    };
+    ctxHandler.handle400(ctx, '参数有误');
     return;
   }
 
   const result = await taskService.queryTasks(taskInfo, [], page, pageCount);
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
@@ -175,71 +136,41 @@ router.delete('/:id', async (ctx) => {
   id = _.toNumber(id);
 
   if (id < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'id 错误！',
-    };
+    ctxHandler.handle400(ctx, '错误！');
     return;
   }
 
   let result = await taskService.queryTasks({ id });
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '任务不存在',
-    };
+    ctxHandler.handle400(ctx, '任务不存在');
     return;
   }
 
   const uId = _.toNumber(result.rows[0].uId);
 
   if (uId !== ctx.token.id) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '没有权限',
-    };
+    ctxHandler.handle400(ctx, '没有权限');
     return;
   }
 
   [result] = result.rows;
 
   if (!_.toNumber(result.isActive)) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '删除成功!',
-    };
+    ctxHandler.handle400(ctx, '!');
     return;
   }
 
   // 如果任务状态是非可删除状态则拒绝请求
   if (result.status === taskStatusConfig.PENDING || result.status === taskStatusConfig.FULFILLED) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '当前状态下不可删除',
-    };
+    ctxHandler.handle400(ctx, '当前状态下不可删除');
     return;
   }
 
   result = await taskService.updateTask({ id, isActive: 0 });
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误！',
-    };
+    ctxHandler.handle400(ctx, '系统错误！');
     return;
   }
 
@@ -277,12 +208,7 @@ router.put('/:id', async (ctx) => {
   id = _.toNumber(id);
 
   if (dv.isParamsInvalid({ id }) || id < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'id 值错误',
-    };
+    ctxHandler.handle400(ctx, '值错误');
     return;
   }
 
@@ -291,44 +217,24 @@ router.put('/:id', async (ctx) => {
   let result = await taskService.queryTasks({ id, isActive: 1 });
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
   if (result.count < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '任务不存在',
-    };
+    ctxHandler.handle400(ctx, '任务不存在');
     return;
   }
 
   [result] = result.rows;
 
   if (result.uId !== uId) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '没有权限',
-    };
+    ctxHandler.handle400(ctx, '没有权限');
     return;
   }
 
   if (result.status !== taskStatusConfig.PENDING) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '当前状态下不能更改',
-    };
+    ctxHandler.handle400(ctx, '当前状态下不能更改');
     return;
   }
 
@@ -336,12 +242,7 @@ router.put('/:id', async (ctx) => {
     result = await dicService.queryDicByID(taskInfo.taskType);
 
     if (!result || result.count < 1) {
-      ctx.status = 400;
-      ctx.body = {
-        status: 400,
-        isSuccess: false,
-        msg: '修改失败，任务类型不存在',
-      };
+      ctxHandler.handle400(ctx, '修改失败，任务类型不存在');
       return;
     }
   }
@@ -349,12 +250,7 @@ router.put('/:id', async (ctx) => {
   result = await taskService.updateTask(taskInfo);
 
   if (result === false) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '修改失败，系统错误',
-    };
+    ctxHandler.handle400(ctx, '修改失败，系统错误');
     return;
   }
 
@@ -369,46 +265,26 @@ router.put('/cancel/:id', async (ctx) => {
   const tId = ctx.params.id;
 
   if (Number.isNaN(tId) || tId < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'id 错误',
-    };
+    ctxHandler.handle400(ctx, '错误');
     return;
   }
 
   let result = await taskService.queryTasks({ id: tId, isActive: 1 });
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
   [result] = result.rows;
 
   if (result.uId !== ctx.token.id) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '没有权限',
-    };
+    ctxHandler.handle400(ctx, '没有权限');
     return;
   }
 
   if (result.status === taskStatusConfig.SUCCESS) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '当前任务状态不可取消',
-    };
+    ctxHandler.handle400(ctx, '当前任务状态不可取消');
     return;
   }
 
@@ -430,12 +306,7 @@ router.put('/cancel/:id', async (ctx) => {
     }
   }
 
-  ctx.status = 400;
-  ctx.body = {
-    status: 400,
-    isSuccess: false,
-    msg: '系统错误',
-  };
+  ctxHandler.handle400(ctx, '系统错误');
 });
 
 module.exports = router;

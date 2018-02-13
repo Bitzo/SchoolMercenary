@@ -2,11 +2,11 @@ const Router = require('koa-router');
 const taskService = require('../../service/taskService');
 const moment = require('moment');
 const _ = require('lodash');
-const userService = require('../../service/userService');
 const config = require('../../config/config');
 const taskUserStatusConfig = require('../../config/statusConfig').taskUserStatus;
 const taskStatusConfig = require('../../config/statusConfig').taskStatus;
 const taskUserService = require('../../service/taskUserService');
+const ctxHandler = require('../../utils/ctxHandler');
 
 const router = new Router();
 
@@ -25,12 +25,7 @@ router.post('/', async (ctx) => {
   uId = _.toNumber(uId);
 
   if (ctx.token.id !== uId) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '没有权限',
-    };
+    ctxHandler.handle400(ctx, '没有权限');
     return;
   }
 
@@ -38,24 +33,14 @@ router.post('/', async (ctx) => {
 
   // 如果已经申请过，且还有效，则拒绝多次申请
   if (result.count > 0) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '您已申请，请等待回复',
-    };
+    ctxHandler.handle400(ctx, '您已申请，请等待回复');
     return;
   }
 
   result = await taskService.queryTasks({ id: tId, isActive: 1 });
 
   if (!result || result.count < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
@@ -63,34 +48,19 @@ router.post('/', async (ctx) => {
 
   // 任务状态不是PENDING, 则不能继续申请
   if (result.status !== taskStatusConfig.PENDING) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '您申请的任务已不能申请参与',
-    };
+    ctxHandler.handle400(ctx, '您申请的任务已不能申请参与');
     return;
   }
 
   if (result.uId === uId) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '您申请的自己组织的任务',
-    };
+    ctxHandler.handle400(ctx, '您申请的自己组织的任务');
     return;
   }
 
   result = await taskUserService.addTaskUser(taskUserInfo);
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
@@ -111,24 +81,14 @@ router.put('/cancel/:tId', async (ctx) => {
   let result = await taskUserService.queryTaskUser({ tId, uId, isActive: 1 });
 
   if (!result || result.count < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
   [result] = result.rows;
 
   if (result.status !== taskUserStatusConfig.PENDING) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '当前任务状态下不允许取消',
-    };
+    ctxHandler.handle400(ctx, '当前任务状态下不允许取消');
     return;
   }
 
@@ -138,12 +98,7 @@ router.put('/cancel/:tId', async (ctx) => {
   }, { id });
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
@@ -173,24 +128,14 @@ router.put('/:tId/:uId', async (ctx) => {
   let result = await taskService.queryTasks({ id: tId, uId: userId, isActive: 1 });
 
   if (!result || result.count < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
   [result] = result.rows;
 
   if (result.status !== taskUserStatusConfig.PENDING) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '当前状态下不需要审核',
-    };
+    ctxHandler.handle400(ctx, '当前状态下不需要审核');
     return;
   }
 
@@ -202,24 +147,14 @@ router.put('/:tId/:uId', async (ctx) => {
   result = await taskUserService.queryTaskUser({ tId, uId, isActive: 1 });
 
   if (!result || result.count < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
   [result] = result.rows;
 
   if (result.status !== taskUserStatusConfig.PENDING) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '当前状态不需审核',
-    };
+    ctxHandler.handle400(ctx, '当前状态不需审核');
     return;
   }
 
@@ -233,12 +168,7 @@ router.put('/:tId/:uId', async (ctx) => {
     }, { id });
 
     if (!result) {
-      ctx.status = 400;
-      ctx.body = {
-        status: 400,
-        isSuccess: false,
-        msg: '系统错误',
-      };
+      ctxHandler.handle400(ctx, '系统错误');
       return;
     }
 
@@ -253,12 +183,7 @@ router.put('/:tId/:uId', async (ctx) => {
     }, { id });
   }
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
   ctx.body = {
@@ -289,22 +214,12 @@ router.get('/', async (ctx) => {
   if (Number.isNaN(status)) status = '';
 
   if (Number.isNaN(page) || page < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'page 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'page 参数有误');
     return;
   }
 
   if (Number.isNaN(pageCount) || pageCount < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'pageCount 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'pageCount 参数有误');
     return;
   }
 
@@ -326,22 +241,12 @@ router.get('/', async (ctx) => {
       result.rows = result.rows.map(value => _.omit(value, 'user'));
     }
   } else {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'uId, tId 参数不合规范',
-    };
+    ctxHandler.handle400(ctx, 'uId, tId 参数不合规范');
     return;
   }
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
   }
 
   ctx.body = {

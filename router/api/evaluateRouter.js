@@ -7,6 +7,7 @@ const taskUserStatusConfig = require('../../config/statusConfig').taskUserStatus
 const taskStatusConfig = require('../../config/statusConfig').taskStatus;
 const taskService = require('../../service/taskService');
 const evaluateService = require('../../service/evaluateService');
+const ctxHandler = require('../../utils/ctxHandler');
 
 const router = new Router();
 
@@ -26,46 +27,26 @@ router.post('/', async (ctx) => {
   const err = dv.isParamsInvalid(evaluateInfo);
 
   if (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: `${err} 字段填写错误`,
-    };
+    ctxHandler.handle400(ctx, `${err} 字段填写错误`);
     return;
   }
 
   if (level < 1 || level > 5) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '评价等级错误',
-    };
+    ctxHandler.handle400(ctx, '评价等级错误');
     return;
   }
 
   let result = await taskUserService.queryTaskUser({ tId, uId, isActive: 1 });
 
   if (!result || result.count < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
   [result] = result.rows;
 
   if (result.status !== taskUserStatusConfig.FINISHED) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '当前状态不可评价',
-    };
+    ctxHandler.handle400(ctx, '当前状态不可评价');
     return;
   }
 
@@ -74,22 +55,12 @@ router.post('/', async (ctx) => {
   result = await taskService.queryTasks({ id: tId, isActive: 1, status: taskStatusConfig.SUCCESS });
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
   if (result.count < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '当前任务状态不可评价',
-    };
+    ctxHandler.handle400(ctx, '当前任务状态不可评价');
     return;
   }
 
@@ -98,24 +69,14 @@ router.post('/', async (ctx) => {
   result = await evaluateService.queryEvaluate({ taskId: tId, userId: uId });
 
   if (!result || result.count !== 0) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误或已经评价',
-    };
+    ctxHandler.handle400(ctx, '系统错误或已经评价');
     return;
   }
 
   result = await evaluateService.addEvaluate(evaluateInfo);
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 
@@ -140,46 +101,26 @@ router.get('/', async (ctx) => {
   pageCount = _.toNumber(pageCount);
 
   if (Number.isNaN(page) || page < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'page 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'page 参数有误');
     return;
   }
 
   if (Number.isNaN(pageCount) || pageCount < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'pageCount 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'pageCount 参数有误');
     return;
   }
 
   const err = await dv.isParamsInvalid({ tId });
 
   if (err) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'tId 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'tId 参数有误');
     return;
   }
 
   const result = await evaluateService.queryEvaluate({ taskId: tId, level }, [], page, pageCount);
 
   if (!result) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '系统错误',
-    };
+    ctxHandler.handle400(ctx, '系统错误');
     return;
   }
 

@@ -8,6 +8,7 @@ const userService = require('../../service/userService');
 const config = require('../../config/config');
 const dv = require('../../utils/dataValidator');
 const encrypt = require('../../utils/encrypt');
+const ctxHandler = require('../../utils/ctxHandler');
 
 const router = new Router();
 
@@ -36,22 +37,12 @@ router.get('/', async (ctx) => {
   pageCount = _.toNumber(pageCount);
 
   if (Number.isNaN(page) || page < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'page 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'page 参数有误');
     return;
   }
 
   if (Number.isNaN(pageCount) || pageCount < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'pageCount 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'pageCount 参数有误');
     return;
   }
 
@@ -73,12 +64,7 @@ router.get('/', async (ctx) => {
     return;
   }
 
-  ctx.status = 400;
-  ctx.body = {
-    status: 400,
-    isSuccess: false,
-    msg: '查询失败',
-  };
+  ctxHandler.handle400(ctx, '查询失败');
 });
 
 /**
@@ -130,12 +116,7 @@ router.put('/:id', async (ctx, next) => {
   const result = await userService.updateUser(userInfo);
 
   if (result === false) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '修改失败',
-    };
+    ctxHandler.handle400(ctx, '修改失败');
   }
 
   ctx.body = {
@@ -156,12 +137,7 @@ router.put('/avatar/:id', async (ctx) => {
   let res = await fileUtils.saveFile(ctx, 'avatar', dir, filename, 'image', 2);
 
   if (id !== ctx.token.id) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '没有权限',
-    };
+    ctxHandler.handle400(ctx, '没有权限');
     return;
   }
 
@@ -188,21 +164,11 @@ router.put('/avatar/:id', async (ctx) => {
       return;
     }
 
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '上传失败',
-    };
+    ctxHandler.handle400(ctx, '上传失败');
     return;
   }
 
-  ctx.status = 400;
-  ctx.body = {
-    status: 400,
-    isSuccess: false,
-    msg: res.data,
-  };
+  ctxHandler.handle400(ctx, res.data);
 });
 
 /**
@@ -220,22 +186,12 @@ router.put('/password/:id', async (ctx, next) => {
   }
 
   if (id !== ctx.token.id) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '没有权限',
-    };
+    ctxHandler.handle400(ctx, '没有权限');
     return;
   }
 
   if (dv.isParamsInvalid({ password })) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: '密码不合法',
-    };
+    ctxHandler.handle400(ctx, '密码不合法');
     return;
   }
 
@@ -251,12 +207,7 @@ router.put('/password/:id', async (ctx, next) => {
     return;
   }
 
-  ctx.status = 400;
-  ctx.body = {
-    status: 400,
-    isSuccess: false,
-    msg: '修改失败',
-  };
+  ctxHandler.handle400(ctx, '修改失败');
 });
 
 module.exports = router;

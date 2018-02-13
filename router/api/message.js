@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const config = require('../../config/config');
 const _ = require('lodash');
 const msgService = require('../../service/messageService');
+const ctxHandler = require('../../utils/ctxHandler');
 
 const router = new Router();
 
@@ -22,22 +23,12 @@ router.get('/', async (ctx) => {
   pageCount = _.toNumber(pageCount);
 
   if (Number.isNaN(page) || page < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'page 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'page 参数有误');
     return;
   }
 
   if (Number.isNaN(pageCount) || pageCount < 1) {
-    ctx.status = 400;
-    ctx.body = {
-      status: 400,
-      isSuccess: false,
-      msg: 'pageCount 参数有误',
-    };
+    ctxHandler.handle400(ctx, 'pageCount 参数有误');
     return;
   }
 
@@ -66,12 +57,7 @@ router.get('/', async (ctx) => {
     return;
   }
 
-  ctx.status = 400;
-  ctx.body = {
-    status: 400,
-    isSuccess: false,
-    msg: '查询失败',
-  };
+  ctxHandler.handle400(ctx, '查询失败');
 });
 
 module.exports = router;
