@@ -59,7 +59,7 @@ router.post('/', async (ctx) => {
 
   [result] = result.rows;
 
-  if (result.status !== taskUserStatusConfig.ACCEPTED) {
+  if (result.status !== taskUserStatusConfig.FINISHED) {
     ctx.status = 400;
     ctx.body = {
       status: 400,

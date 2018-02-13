@@ -16,6 +16,7 @@ const config = {
     REJECTED: 2, // 已报名某任务，但任务发布者已拒绝申请
     CANCELED: 3, // 用户自行取消，在除PENDING状态外不能转换到此状态
     BECANCELED: 4, // 被取消，当task的状态被改为CANCELED，改变成此状态
+    FINISHED: 5, // 任务完成
   },
 };
 

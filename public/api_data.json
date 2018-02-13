@@ -1181,7 +1181,7 @@
   {
     "type": "PUT",
     "url": "/api/tasks/cancel/:id",
-    "title": "*取消任务",
+    "title": "取消任务",
     "name": "CancelTask",
     "group": "Task",
     "version": "1.0.0",
