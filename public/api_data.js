@@ -1179,10 +1179,10 @@ define({ "api": [
     "groupTitle": "Message"
   },
   {
-    "type": "DELETE",
-    "url": "/api/tasks/:id",
-    "title": "*删除任务",
-    "name": "DeleteTask",
+    "type": "PUT",
+    "url": "/api/tasks/cancel/:id",
+    "title": "*取消任务",
+    "name": "CancelTask",
     "group": "Task",
     "version": "1.0.0",
     "parameter": {
@@ -1232,10 +1232,10 @@ define({ "api": [
     "groupTitle": "Task"
   },
   {
-    "type": "PUT",
-    "url": "/api/tasks/cancel/:id",
-    "title": "*取消任务",
-    "name": "FinishTask",
+    "type": "DELETE",
+    "url": "/api/tasks/:id",
+    "title": "删除任务",
+    "name": "DeleteTask",
     "group": "Task",
     "version": "1.0.0",
     "parameter": {
