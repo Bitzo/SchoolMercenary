@@ -365,4 +365,77 @@ router.put('/:id', async (ctx) => {
   };
 });
 
+router.put('/cancel/:id', async (ctx) => {
+  const tId = ctx.params.id;
+
+  if (Number.isNaN(tId) || tId < 1) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: 'id 错误',
+    };
+    return;
+  }
+
+  let result = await taskService.queryTasks({ id: tId, isActive: 1 });
+
+  if (!result) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '系统错误',
+    };
+    return;
+  }
+
+  [result] = result.rows;
+
+  if (result.uId !== ctx.token.id) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '没有权限',
+    };
+    return;
+  }
+
+  if (result.status === taskStatusConfig.SUCCESS) {
+    ctx.status = 400;
+    ctx.body = {
+      status: 400,
+      isSuccess: false,
+      msg: '当前任务状态不可取消',
+    };
+    return;
+  }
+
+  result = await taskService.updateTask({ id: tId, status: taskStatusConfig.CANCELED });
+
+  if (result !== false) {
+    result = await taskUserService.updateTaskUser(
+      { status: taskUserStatusConfig.BECANCELED },
+      { tId },
+    );
+
+    if (result !== false) {
+      ctx.body = {
+        status: 200,
+        isSuccess: true,
+        msg: '修改成功',
+      };
+      return;
+    }
+  }
+
+  ctx.status = 400;
+  ctx.body = {
+    status: 400,
+    isSuccess: false,
+    msg: '系统错误',
+  };
+});
+
 module.exports = router;
