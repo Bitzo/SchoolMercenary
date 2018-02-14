@@ -1287,7 +1287,7 @@ define({ "api": [
   {
     "type": "PUT",
     "url": "/api/tasks/finish/:id",
-    "title": "*完成任务",
+    "title": "完成任务",
     "name": "FinishTask",
     "group": "Task",
     "version": "1.0.0",
@@ -1364,11 +1364,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
-            "size": "..20",
+            "type": "Number",
             "optional": false,
             "field": "taskType",
-            "description": "<p>任务类型</p>"
+            "description": "<p>任务类型(字典表ID)</p>"
           },
           {
             "group": "Parameter",
@@ -1383,7 +1382,8 @@ define({ "api": [
             "type": "Number",
             "optional": true,
             "field": "menberCount",
-            "description": "<p>=1 任务需要的成员数量</p>"
+            "defaultValue": "1",
+            "description": "<p>任务需要的成员数量</p>"
           },
           {
             "group": "Parameter",
@@ -1548,11 +1548,10 @@ define({ "api": [
           },
           {
             "group": "Parameter",
-            "type": "String",
-            "size": "..20",
+            "type": "Number",
             "optional": true,
             "field": "taskType",
-            "description": "<p>任务类型</p>"
+            "description": "<p>任务类型(字典表ID)</p>"
           },
           {
             "group": "Parameter",

@@ -1,8 +1,18 @@
 # 校园佣兵
 
-## 后端接口-移动端API
+## 接口文档: [https://api.bitzo.cn](https://api.bitzo.cn)
 
-### 接口文档: [https://api.bitzo.cn](https://api.bitzo.cn)
+## 目录
+
+- [后端接口-移动端API](#后端接口-移动端api)
+  - [用户API](#用户api)
+  - [消息通知API](#消息通知api)
+  - [任务API](#任务api)
+  - [任务用户API](#任务用户api)
+  - [评价任务API](#评价任务api)
+- [需要完成的自动任务](#需要完成的自动任务)
+
+## 后端接口-移动端API
 
 ### 用户API
 
@@ -39,6 +49,7 @@
 | 3 | PUT | /api/tasks/:id | 修改任务 |
 | 4 | PUT | /api/tasks/cancel/:id | 取消任务  |
 | 5 | DELETE | /api/tasks/:id | 删除任务 |
+| 6 | PUT | /api/tasks/finish/:id | 完成任务 |
 
 ### 任务用户API
 
@@ -56,3 +67,9 @@
 | 1 | POST | /api/evaluate | 评价参与过的任务 |
 | 2 | GET | /api/evaluate  | 查询评价信息 |
 | ~~3~~ | ~~PUT~~ | ~~/api/evaluate/:userId~~ | ~~评价用户~~ |
+
+## 需要完成的自动任务
+
+| 序号 | 任务 | 描述 | 备注 |
+|:-:|:--:|:--|:---|
+| 1 |   |   |   |
