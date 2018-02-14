@@ -34,19 +34,19 @@ router.post('/', async (ctx) => {
   const err = dv.isParamsInvalid(taskInfo);
 
   if (err) {
-    ctxHandler.handle400(ctx, '参数填写不正确');
+    ctxHandler.handle400(ctx, `${err} 参数填写不正确`);
     return;
   }
 
   if (!moment(time).isValid()) {
-    ctxHandler.handle400(ctx, '不是一个正确的时间值');
+    ctxHandler.handle400(ctx, 'time 不是一个正确的时间值');
     return;
   }
 
   const now = moment().format('YYYY-MM-DD HH:mm:ss');
 
   if (moment(time).isBefore(now)) {
-    ctxHandler.handle400(ctx, '不能早于当前时间');
+    ctxHandler.handle400(ctx, 'time 不能早于当前时间');
     return;
   }
 
@@ -99,12 +99,12 @@ router.get('/', async (ctx) => {
   pageCount = _.toNumber(pageCount);
 
   if (Number.isNaN(page) || page < 1) {
-    ctxHandler.handle400(ctx, '参数有误');
+    ctxHandler.handle400(ctx, 'page 参数有误');
     return;
   }
 
   if (Number.isNaN(pageCount) || pageCount < 1) {
-    ctxHandler.handle400(ctx, '参数有误');
+    ctxHandler.handle400(ctx, 'pageCount 参数有误');
     return;
   }
 
@@ -136,7 +136,7 @@ router.delete('/:id', async (ctx) => {
   id = _.toNumber(id);
 
   if (id < 1) {
-    ctxHandler.handle400(ctx, '错误！');
+    ctxHandler.handle400(ctx, 'id 错误！');
     return;
   }
 
@@ -208,7 +208,7 @@ router.put('/:id', async (ctx) => {
   id = _.toNumber(id);
 
   if (dv.isParamsInvalid({ id }) || id < 1) {
-    ctxHandler.handle400(ctx, '值错误');
+    ctxHandler.handle400(ctx, 'id 值错误');
     return;
   }
 
@@ -261,11 +261,14 @@ router.put('/:id', async (ctx) => {
   };
 });
 
+/**
+ * 取消任务
+ */
 router.put('/cancel/:id', async (ctx) => {
   const tId = ctx.params.id;
 
   if (Number.isNaN(tId) || tId < 1) {
-    ctxHandler.handle400(ctx, '错误');
+    ctxHandler.handle400(ctx, 'id 错误');
     return;
   }
 
@@ -300,6 +303,57 @@ router.put('/cancel/:id', async (ctx) => {
       ctx.body = {
         status: 200,
         isSuccess: true,
+        msg: '修改成功',
+      };
+      return;
+    }
+  }
+
+  ctxHandler.handle400(ctx, '系统错误');
+});
+
+/**
+ * 完成任务
+ */
+router.put('/finish/:id', async (ctx) => {
+  const tId = ctx.params.id;
+
+  if (Number.isNaN(tId) || tId < 1) {
+    ctxHandler.handle400(ctx, 'id 错误');
+    return;
+  }
+
+  let result = await taskService.queryTasks({ id: tId });
+
+  if (!result) {
+    ctxHandler.handle400(ctx, '系统错误');
+    return;
+  }
+
+  [result] = result.rows;
+
+  if (result.uId !== ctx.token.id) {
+    ctxHandler.handle400(ctx, '没有权限');
+    return;
+  }
+
+  if (result.status !== taskStatusConfig.FULFILLED) {
+    ctxHandler.handle400(ctx, '当前任务状态不能完成');
+    return;
+  }
+
+  result = await taskService.updateTask({ id: tId, status: taskStatusConfig.SUCCESS });
+
+  if (result !== false) {
+    result = await taskUserService.updateTaskUser(
+      { status: taskUserStatusConfig.FINISHED },
+      { tId, status: taskUserStatusConfig.ACCEPTED },
+    );
+
+    if (result !== false) {
+      ctx.body = {
+        status: 200,
+        isSuccess: false,
         msg: '修改成功',
       };
       return;
